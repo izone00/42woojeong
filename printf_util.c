@@ -1,214 +1,315 @@
-unsigned long   ft_exp(int n, int p)
-{
-    int i;
-    unsigned long   rst;
+#include <unistd.h>
+//#include <stdio.h>//////////////////////////////
 
-    i = 0;
-    rst = 1;
-    if (p == 0)
-        reutrn (1);
-    while (i < p)
+int     ft_strlen(const char *str)//////////////////////////// 지워
+{
+        int     i;
+
+        i = 0;
+        while (str[i] != '\0')
+                i++;
+        return (i);
+}
+
+typedef struct s_container {
+    int     sign[2];
+    char    str[30];                
+    int     zero_len;
+    int     space_len;
+} t_container;
+
+enum    option {
+    flag = 0,
+    width = 5,
+    precision = 6,
+    type = 7
+};
+enum    flag {
+    minus = 0,
+    plus = 1,
+    zero = 2,
+    space = 3,
+    shop = 4
+};
+
+void    init_container(t_container *con)
+{
+    int idx;
+
+    idx = 0;
+    (con -> sign)[0] = 0;
+    (con -> sign)[1] = 0;
+    con -> zero_len = 0;
+    con -> space_len = 0;
+    while (idx < 30)
     {
-        rst *= n;
-        i++;
+        (con -> str)[idx] = 0;
+        idx++;
     }
-    return (rst);
 }
 
-void    put_space(int len, int is_zero)
+int get_str(t_container *conInt, int num)
 {
-    char    space;
+    int f_sign;
+    int idx;
 
-    if (is_zero)
-        space = '0';
-    else
-        space = ' ';
-    while (len-- > 0)
-        write(1, &space, 1);
-}
-
-int len_int(int num)
-{
-    int len;
-
-    len = 1;
-    while (num / 10)
-    {
-        len++;
-        num /= 10;
-    }
-    return (len);
-}
-
-void    put_int(int num, int *opt, int num_len, int word_len)
-{
-    int digit;
-
+    f_sign = 1;
     if (num < 0)
-        write(1, "-", 1);
-    else if (opt[space] == 1)
-        write(1, " ", 1);
-    else if (opt[plus] == 1)
-        write(1, "+", 1);
-    else
-        word_len++;
-    put_space(word_len - num_len - 1, 1);
-    ft_putnbr(num);        
+        f_sign = -1;
+    idx = 0;
+    if (num == 0)
+        (conInt -> str)[idx++] = '0';
+    while (num)
+    {
+        (conInt -> str)[idx] = (num % 10) * f_sign + '0';//거꾸로 넣는다. 출력할때 거꾸로 해야됨
+        num /= 10;
+        idx++;
+    }
+    (conInt -> str)[idx] = '\0';
+    return (idx);
 }
 
+int get_int_sign(int *opt, int num)
+{
+    if (num < 0)
+        return ('-');
+    else if (opt[plus])
+        return ('+');
+    else if (opt[space])
+        return (' ');
+    else
+        return (0); 
+}
+int get_zero(int num_len, int *opt, int *sign)
+{
+    if (opt[precision] > 0) //정확도에 대한 정보가 있을때
+    {
+        if (opt[precision] > num_len) //정확도가 숫자의 길이를 넘을때
+            return (opt[precision] - num_len);
+        else
+            return (0);
+    }
+    else if (opt[zero]) //정확도에 대한 정보가 없고 '0'flag가 쓰일때 ('-'플래그의 유무를 고려해야됨!!!!!!!!!!!)
+    {
+        num_len += (sign[0] != 0);//부호의 첫칸
+        num_len += (sign[1] != 0);//부호의 두번째칸 16진수에서 사용됨
+        return (opt[width] - num_len);
+    }
+    else //정확도에 대한 정보가없고 '0'flag가쓰이지않을때
+        return (0); 
+}
+
+int get_space(t_container conInt, int *opt, int num_len)
+{
+    int word_len;
+
+    word_len = 0;
+    word_len += num_len;
+    word_len += (conInt.sign[0] != 0);
+    word_len += (conInt.sign[1] != 0);
+    word_len += conInt.zero_len;
+    if (word_len < opt[width])
+        return (opt[width] - word_len);
+    else
+        return (0);
+}
+
+void    right_align(t_container conInt, int len)
+{
+    int idx;
+    while ((conInt.space_len)--)
+        write(1, " ", 1);
+    if (conInt.sign[0] != 0)
+        write(1, &(conInt.sign[0]), 1);
+    if (conInt.sign[1] != 0)
+        write(1, &(conInt.sign[1]), 1);
+    while ((conInt.zero_len)--)
+        write(1, "0", 1);
+    idx = len - 1; //인덱스를 끝에서 부터 시작해 반대로 출력한다.
+    while (idx >= 0)
+    {
+        write(1, conInt.str + idx, 1); 
+        idx --;
+    }
+}
+void    left_align(t_container conInt, int len)
+{
+    int idx;
+
+    if (conInt.sign[0] != 0)
+        write(1, &(conInt.sign[0]), 1);
+    if (conInt.sign[1] != 0)
+        write(1, &(conInt.sign[1]), 1);
+    while ((conInt.zero_len)--)
+        write(1, "0", 1);
+    idx = len - 1; //인덱스를 끝에서 부터 시작해 반대로 출력한다.
+    while (idx >= 0)
+    {
+        write(1, conInt.str + idx, 1); 
+        idx --;
+    }
+    while ((conInt.space_len)--)
+        write(1, " ", 1);
+}
 void    print_int(int num, int *opt)
 {
-    int word_len;
+    t_container conInt;
     int num_len;
-    
-    num_len = len_int(num); //순수 숫자의 길이
-    word_len = num_len; 
-    if (num_len < opt[presicion])
-        word_len = opt[presicion]; //정확도 추가
-    if (num < 0 || opt[plus] == 1 || opt[space] == 1)
-        word_len++;  //부호 추가
-    if (opt[presicion] == 0 && opt[zero] == 1 && opt[width] > word_len) //정확도가 없는데 flag'0'가 사용되면
-    {
-        num_len += opt[width] - word_len;
-        word_len = opt[width];
-    }
-    if (!opt[minus])
-    {
-        put_space(opt[width] - word_len, opt[zero] * (!opt[presicion]));
-        put_int(num, opt, num_len, word_len);
-    }
+
+    init_container(&conInt);
+    num_len = get_str(&conInt, num);
+    conInt.sign[0] = get_int_sign(opt, num);
+    conInt.zero_len = get_zero(num_len, opt, conInt.sign);
+    conInt.space_len = get_space(conInt, opt, num_len);
+    if (opt[minus])
+        left_align(conInt, num_len);
     else
-    {
-        put_int();
-        put_space(width - word_len, 0);
-    }
+        right_align(conInt, num_len);
 }
 
-void    print_char(char ch, int *opt)
+int get_unsign_str(t_container *conUl, unsigned long num)
 {
-    int word_len;
-
-    word_len = 1;
-    if (!opt[minus])
-    {
-        put_space(width - word_len, 0);
-        write(1, &ch, 1);
-    }
-    else
-    {
-        write(1, &ch, 1);
-        put_space(width - word_len, 0);
-    }
-}
-
-int len_ul(unsigned long num)
-{
-    int len;
-
-    len = 1;
-    while (num / 10)
-    {
-        len++;
-        num /= 10;
-    }
-    return (len);
-}
-
-void    put_uint(unsigned int num, int word_len, int num_len);
-{
-    char    ch;
-    unsigned int div;
-
-    put_space(word_len - num_len, 1);
+    int idx;
+;
+    idx = 0;
     if (num == 0)
-        write(1, "0", 1);
-    else
+        (conUl -> str)[idx++] = '0';
+    while (num)
     {
-        div = (unsigned int)ft_exp(10, num_len);
-        while (div >= 1)
-        {
-            ch = (num / div) + '\0';
-            write(1, &ch, 1);
-            div /= 10;
-        }
-    }   
+        (conUl -> str)[idx] = (num % 10) + '0';//거꾸로 넣는다. 출력할때 거꾸로 해야됨
+        num /= 10;
+        idx++;
+    }
+    (conUl -> str)[idx] = '\0';
+    return (idx);
 }
 
-void    print_unsigned_int(unsigned int num, int *opt)
+void    print_unsigned_int(unsigned long num, int *opt)
 {
-    int word_len;
+    t_container conUl;
     int num_len;
 
-    num_len = len_ul((unsigned long)num);
-    if (num_len < opt[presicion])
-        word_len = opt[presicion];
-    if (!opt[minus])
-    {
-        put_space(width - word_len, opt[zero] * !opt[presicion]);
-        put_uint(num, word_len, num_len);
-    }
+    init_container(&conUl);
+    num_len = get_unsign_str(&conUl, num);
+    conUl.zero_len = get_zero(num_len, opt, conUl.sign);
+    conUl.space_len = get_space(conUl, opt, num_len);
+    if (opt[minus])
+        left_align(conUl, num_len);
     else
+        right_align(conUl, num_len);
+}
+
+int get_hexa_str(t_container *conUl, unsigned long hexa, int type)
+{
+    int idx;
+;
+    idx = 0;
+    if (hexa == 0)
+        (conUl -> str)[idx++] = '0';
+    while (hexa)
     {
-        put_uint(num, word_len, num_len);
-        put_space(width - word_len, 0);
+        if (hexa % 16 <= 9)
+            (conUl -> str)[idx] = (hexa % 16) + '0';//거꾸로 넣는다. 출력할때 거꾸로 해야됨
+        else if (type == 'X')
+            (conUl -> str)[idx] = (hexa % 16) + 55;//소문자로 표시
+        else
+            (conUl -> str)[idx] = (hexa % 16) + 87;//대문자로 표시
+        hexa /= 16;
+        idx++;
+    }
+    (conUl -> str)[idx] = '\0';
+    return (idx);
+}
+
+void    get_hexa_sign(t_container *conUl, int shop)
+{
+    if (shop == 1)
+    {
+        (conUl -> sign)[0] = '0';
+        (conUl -> sign)[1] = 'x';
     }
 }
 
 void    print_sixteen(unsigned int hexa, int *opt)
 {
-    int word_len;
+    t_container conUl;
     int num_len;
 
-    num_len = len_ul((unsigned long)hexa);
-    if (num_len < opt[presicion])
-        word_len = opt[presicion];
-    if (opt[shop] == 1)
-        word_len += 2;
-    if (!opt[minus])
-    {
-        put_space(width - word_len, 0);
-        put_hexa(hexa, opt[shop]);
-    }
+    init_container(&conUl);
+    num_len = get_hexa_str(&conUl, hexa, opt[type]);
+    get_hexa_sign(&conUl, opt[shop]);
+    conUl.zero_len = get_zero(num_len, opt, conUl.sign);
+    conUl.space_len = get_space(conUl, opt, num_len);
+    if (opt[minus])
+        left_align(conUl, num_len);
     else
-    {
-        put_hexa(hexa, opt[shop]);
-        put_space(width - word_len, 0);
-    }
+        right_align(conUl, num_len);
 }
+
 
 void    print_adress(unsigned long addr, int *opt)
 {
-    int word_len;
+    t_container conUl;
     int num_len;
 
-    num_len = len_ul(addr);
-    if (!opt[minus])
+    init_container(&conUl);
+    num_len = get_hexa_str(&conUl, addr, opt[type]);
+    get_hexa_sign(&conUl, 1);//opt[shop] = 1 대입
+    conUl.zero_len = get_zero(num_len, opt, conUl.sign);
+    conUl.space_len = get_space(conUl, opt, num_len);
+    if (opt[minus])
+        left_align(conUl, num_len);
+    else
+        right_align(conUl, num_len);
+}
+
+
+void    print_char(char ch, int *opt)
+{
+    int space_len;
+
+    if (1 < opt[width])
+        space_len = opt[width] - 1;
+    else
+        space_len = 0;
+    if (opt[minus])
     {
-        put_space(width - word_len, opt[zero]);
-        put_hexa(hexa, 1);
+        write(1, &ch, 1);
+        while (space_len--)
+            write(1, " ", 1);
     }
     else
     {
-        put_hexa(hexa, 1);
-        put_space(width - word_len, 0);
+        while (space_len--)
+            write(1, " ", 1);
+        write(1, &ch, 1);
     }
 }
 
 void    print_string(char *str, int *opt)
 {
-    //presicion 무시 width는 적용
-    int word_len;
-    
+    int str_len;
+    int space_len;
 
-    word_len = ft_strlen(str);
-    if (!opt[minus])
+    str_len = ft_strlen(str);
+    if (str_len < opt[width])
+        space_len = opt[width] - str_len;
+    else
+        space_len = 0;
+    if (opt[minus])
     {
-        put_space(opt[width] - word_len, 0);
-        write(1, str, word_len);
+        write(1, str, str_len);
+        while (space_len--)
+            write(1, " ", 1);
     }
     else
     {
-        write(1, str, word_len);
-        put_space(opt[width] - word_len, 0);
+        while (space_len--)
+            write(1, " ", 1);
+        write(1, str, str_len);
     }
 }
+
+
+
+

@@ -7,6 +7,13 @@
 //va_grg(ap, 자료형)
 //va_end(ap)
 
+void    print_int(int num, int *opt);
+void    print_char(char ch, int *opt);
+void    print_string(char *str, int *opt);
+void    print_unsigned_int(unsigned long num, int *opt);
+void    print_sixteen(unsigned int hexa, int *opt);
+void    print_adress(unsigned long addr, int *opt);
+
 enum    option {
     flag = 0,
     width = 5,
@@ -55,18 +62,18 @@ int    check_width(const char **p_str)
     return (change_num(p_str));
 }
 
-int     check_precision(const char **p_str, int *opt)
+int     check_precision(const char **p_str)
 {
-    //'.'이 찍혀있으면 일단 1을 opt[pre]에 넣어서 pre가 있음을 표시
+    //'.'이 찍혀있으면 일단 1을 opt[precision]에 넣어서 정확도가 있음을 표시
     int exist_pre;
 
     exist_pre = 0;
     if (**p_str == '.')
     {
+        (*p_str)++;
         exist_pre = change_num(p_str);
         if (exist_pre == 0)
             exist_pre = 1;
-        (*p_str)++;
         return (exist_pre);
     }
     else
@@ -77,15 +84,9 @@ int    check_type(const char **p_str)
 {
     while (**p_str)
     {
-        if (**p_str == 'c' || **p_str == 'd' || **p_str == 'i' || **p_str == 'x' || **p_str == 'X' )
-            break;
-        else if (**p_str == 'd')
-            break;
-        else if (**p_str == 'p')
-            break;
-        else if (**p_str == '%')
-            break;
-        else if (**p_str == 's')
+        if (**p_str == 'c' || **p_str == 'd' || **p_str == 'i' || **p_str == 'u' \
+         || **p_str == 'x' || **p_str == 'X' || **p_str == 'p' || **p_str == '%' \
+         || **p_str == 's')
             break;
         (*p_str)++;
     }
@@ -107,92 +108,22 @@ void    parse(const char **p_str, int *opt)
 //     printf("type : %c", opt[type]);
 }
 
-void    put_space(int len, int is_zero)
-{
-    char    space;
-
-    if (is_zero)
-        space = '0';
-    else
-        space = ' ';
-    while (len-- > 0)
-        write(1, &space, 1);
-}
-
-int len_int(int num)
-{
-    int len;
-
-    len = 1;
-    while (num / 10)
-    {
-        len++;
-        num /= 10;
-    }
-    return (len);
-}
-
-void    put_int(int num, int *opt, int num_len, int word_len)
-{
-    int digit;
-
-    if (num < 0)
-        write(1, "-", 1);
-    else if (opt[space] == 1)
-        write(1, " ", 1);
-    else if (opt[plus] == 1)
-        write(1, "+", 1);
-    else
-        word_len++;
-    put_space(word_len - num_len - 1, 1);
-    ft_putnbr(num);        
-}
-
-void    print_int(int num, int *opt)
-{
-    int word_len;
-    int num_len;
-    
-    num_len = len_int(num); //순수 숫자의 길이
-    word_len = num_len; 
-    if (num_len < opt[presicion])
-        word_len = opt[presicion]; //정확도 추가
-    if (num < 0 || opt[plus] == 1 || opt[space] == 1)
-        word_len++;  //부호 추가
-    if (opt[presicion] == 0 && opt[zero] == 1 && opt[width] > word_len) //정확도가 없는데 flag'0'가 사용되면
-    {
-        num_len += opt[width] - word_len;
-        word_len = opt[width];
-    }
-    if (!opt[minus])
-    {
-        put_space(opt[width] - word_len, opt[zero] * (!opt[presicion]));
-        put_int(num, opt, num_len, word_len);
-    }
-    else
-    {
-        put_int(num, opt, num_len, word_len);
-        put_space(width - word_len, 0);
-    }
-}
-
 void    convert_print(int *opt, va_list *ap, int *len)
 {
-    
     if (opt[type] == 'd' || opt[type] == 'i' )
         print_int(va_arg(*ap, int), opt);
-    // else if (opt[type] == 'c')
-    //     print_char(va_arg(*ap, int), opt);
-    // else if (opt[type] == 'u')
-    //     print_unsigned_int(va_arg(*ap, unsigned int), opt);
-    // else if (opt[type] == 'x' || opt[type] == 'X' )
-    //     print_sixteen(va_arg(*ap, unsigned int), opt);
-    // else if (opt[type] == 'p')
-    //     print_adress(va_arg(*ap, unsigned long), opt);
-    // else if (opt[type] == 's')
-    //     print_string(va_arg(*ap, char *), opt);
-    // else if (opt[type] == '%')
-    //     write(1, "%%", 1);
+    else if (opt[type] == 'u')
+        print_unsigned_int((unsigned long)va_arg(*ap, unsigned int), opt);
+    else if (opt[type] == 'x' || opt[type] == 'X' )
+        print_sixteen((unsigned long)va_arg(*ap, unsigned int), opt);
+    else if (opt[type] == 'p')
+        print_adress(va_arg(*ap, unsigned long), opt);
+    else if (opt[type] == 'c')
+         print_char(va_arg(*ap, int), opt);
+    else if (opt[type] == 's')
+        print_string(va_arg(*ap, char *), opt);
+    else if (opt[type] == '%')
+        write(1, "%%", 1);
 }
 
 void init_option(int *opt)
@@ -220,23 +151,21 @@ int ft_printf(const char *str, ...)
     {
         if (*str == '%')
         {
-            //printf("is %%\n");
-            init_option(opt);
-            if (*str)
-                str++;//str좌료 '%'에서 옮기기
-            parse(&str, opt);
+            init_option(opt); //opt초기화
+            str++; //str좌표 '%'에서 다음으로옮기기
+            parse(&str, opt); //str읽어서 opt채우고 str이 마지막 type문자를 가르친다.
             // for (int i = 0; i < 6; i++)
             //     printf("(%d)%d ", i , opt[i]);
             // printf("(%d)%c ", 7 , opt[7]);
             // printf("\n");
-            convert_print(opt, &ap, &len);
+            convert_print(opt, &ap, &len); //변환해서 출력
         }
         else
         {
-            write(1, str, 1);
+            write(1, str, 1); //그냥 문자 출력
             len++;
         }
-        if (*str)
+        if (*str) 
             str++;
     }
     va_end(ap);
@@ -247,32 +176,40 @@ int ft_printf(const char *str, ...)
 
 /*  flag_oder
 10진수(%d, %i)
-        무시됨(에러)        같이 적용됨       무시하고 적용    
-' ' :     '+'(사용불가)     '-','0'          
-'0' :     '-'(사용불가)     ' ','+'
-'+' :     ' '(사용불가)     '-','0'
-'-' :     '0'(사용불가)     ' ','+'
+         무시됨(에러)      같이 적용됨       무시하고 적용    
+' ' :    '+'(사용불가)     '-','0'          
+'0' :    '-'(사용불가)     ' ','+'
+'+' :    ' '(사용불가)     '-','0'
+'-' :    '0'(사용불가)     ' ','+'
+precision : 가능
 
 unsigned 10진수(%u)
             사용불가           사용가능(중복불가)
         ' ','+'(부호관련)       '-','0'
-
-주소(%p)
-        사용불가           사용가능(중복불가)
-      ' ','+','0','#'            '-'
-
-캐릭터(%c)
-        사용불가           사용가능(중복불가)
-      ' ','+','0'            '-'
-
-문자열(%s)
-        사용불가           사용가능(중복불가)
-      ' ','+','0'            '-'
+precision : 가능
 
 16진수(%x, %X)
             사용불가        사용가능(중복불가)
 '#'쓸때 :    '+',' '        '-','0'                     
 '#'안쓸때 :   '+',' '        '-','0'
+precision : 가능
+
+주소(%p)
+        사용불가           사용가능(중복불가)
+      ' ','+','0','#'            '-'
+precision : 사용불가
+
+캐릭터(%c)
+        사용불가           사용가능(중복불가)
+      ' ','+','0'            '-'
+precision : 사용불가
+
+문자열(%s)
+        사용불가           사용가능(중복불가)
+      ' ','+','0'            '-'
+precision : 사용불가
+
+
 
 문자'%' (%%)
     '%' 쓸데는 에러없이 플래그 전부 무시되고 '%'출력
@@ -283,7 +220,8 @@ int main()
 {
     //ft_printf("num1 : %+-0 #13.7d\n", 5);
     int num = 1;
-    printf("[%-010x]", 16*16-10);
+    ft_printf("ft_printf : [%-20X %%]\n", 16*16-9);
+       printf("  printf  : [%-20X %%]\n", 16*16-9);
 }
 /*width_precision
 
@@ -303,5 +241,3 @@ precition : 부호와 공백을 제외하고 0과 숫자까지의 길이ㅣ
 
 ####precision이 적용될때 '0'flag는 무시되고 pre를 초과하는 공백은 무조건 ' '으로 표시
 */
-
-//출력시 공백 부호 숫자 세가지로
