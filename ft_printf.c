@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ printf.c                                       :+:      :+:    :+:   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:11:47 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/26 17:20:35 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/27 17:00:28 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ int ft_printf(const char *str, ...)
         {
             init_option(opt); //opt초기화
             str++; //str좌표 '%'에서 다음으로옮기기
-            parse(&str, opt); //str읽어서 opt채우고 str이 마지막 type문자를 가르친다.
+            get_option(&str, opt); //str읽어서 opt채우고 str이 마지막 type문자를 가르친다.
             // for (int i = 0; i < 6; i++)
             //     printf("(%d)%d ", i , opt[i]);
             // printf("(%d)%c ", 7 , opt[7]);
             // printf("\n");
-            convert_print(opt, &ap, &len); //변환해서 출력
+            len += convert_print(opt, &ap, &len); //변환해서 출력
         }
         else
         {
@@ -47,7 +47,7 @@ int ft_printf(const char *str, ...)
     return (len);
 }
 
-void init_option(int *opt)
+void    init_option(int *opt)
 {
     int i = 0;
     
@@ -58,7 +58,7 @@ void init_option(int *opt)
     }
 }
 
-void    parse(const char **p_str, int *opt)
+void    get_option(const char **p_str, int *opt)
 {
     while (check_flag(p_str, opt))
         (*p_str)++;
@@ -73,30 +73,31 @@ void    parse(const char **p_str, int *opt)
 //     printf("type : %c", opt[type]);
 }
 
-void    convert_print(int *opt, va_list *ap, int *len)
+int convert_print(int *opt, va_list *ap, int *len)
 {
     if (opt[type] == 'd' || opt[type] == 'i' )
-        print_int(va_arg(*ap, int), opt);
+        return (print_int(va_arg(*ap, int), opt));
     else if (opt[type] == 'u')
-        print_unsigned_int((unsigned long)va_arg(*ap, unsigned int), opt);
+        return (print_unsigned_int((unsigned long)va_arg(*ap, unsigned int), opt));
     else if (opt[type] == 'x' || opt[type] == 'X' )
-        print_sixteen((unsigned long)va_arg(*ap, unsigned int), opt);
+        return (print_hexa((unsigned long)va_arg(*ap, unsigned int), opt));
     else if (opt[type] == 'p')
     {
         opt[shop] = 1;
-        print_sixteen(va_arg(*ap, unsigned long), opt);
+        return (print_hexa((unsigned long)va_arg(*ap, void *), opt));//void *로 바꿔야 한다.
     }
     else if (opt[type] == 'c')
-         print_char(va_arg(*ap, int), opt);
+        return (print_char(va_arg(*ap, int), opt));
     else if (opt[type] == 's')
-        print_string(va_arg(*ap, char *), opt);
+        return (print_string(va_arg(*ap, char *), opt));
     else if (opt[type] == '%')
+    {
         write(1, "%%", 1);
+        return (1);
+    }
+    else
+        return (0);
 }
-
-
-
-
 
 
 
@@ -139,16 +140,21 @@ precision : 사용불가
 
 문자'%' (%%)
     '%' 쓸데는 에러없이 플래그 전부 무시되고 '%'출력
-*/
 
+*/
 
 int main()
 {
     //ft_printf("num1 : %+-0 #13.7d\n", 5);
     int num = 1;
-    ft_printf("ft_printf : [%-20X %%]\n", 16*16-9);
-       printf("  printf  : [%-20X %%]\n", 16*16-9);
+    int num1 = ft_printf("ft_printf : [%-20d %%]\n", 16*16-9);
+    int num2 =    printf("  printf  : [%-20d %%]\n", 16*16-9);
+    int num3 = printf("[%c]\n",9);
+
+    printf("ft : %d, print : %d 3 : %d" , num1, num2, num3);
 }
+
+
 /*width_precision
 
 width : 부호와 공백 포함 전체 길이

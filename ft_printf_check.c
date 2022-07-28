@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:13:06 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/26 17:15:54 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/27 13:40:14 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,19 @@ int     check_precision(const char **p_str)
         return (0);
 }
 
+int     change_num(const char **p_str)
+{
+    int rst;
+
+    rst = 0;
+    while ('0' <= **p_str && '9' >= **p_str)
+    {
+        rst= rst * 10 + **p_str - '0';
+        (*p_str)++;
+    }
+    return (rst);
+}
+
 int    check_type(const char **p_str)
 {
     while (**p_str)
@@ -65,15 +78,3 @@ int    check_type(const char **p_str)
     return (**p_str);
 }
 
-int     change_num(const char **p_str)
-{
-    int rst;
-
-    rst = 0;
-    while ('0' <= **p_str && '9' >= **p_str)
-    {
-        rst= rst * 10 + **p_str - '0';
-        (*p_str)++;
-    }
-    return (rst);
-}

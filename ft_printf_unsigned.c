@@ -1,18 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_unsigned.c                                  :+:      :+:    :+:   */
+/*   ft_printf_unsigned.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:07:09 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/26 17:07:28 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/27 16:38:54 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_lib.h"
 
-int get_unsign_str(t_container *conUl, unsigned long num)
+int print_unsigned_int(unsigned long num, int *opt)
+{
+    t_container conUl;
+    int num_len;
+
+    init_container(&conUl);
+    num_len = get_unsigned_str(&conUl, num);
+    conUl.zero_len = get_zero(num_len, opt, conUl.sign);
+    conUl.space_len = get_space_for_num(conUl, opt, num_len);
+    if (opt[minus])
+        return (left_align(conUl, num_len));
+    else
+        return (right_align(conUl, num_len));
+}
+
+int get_unsigned_str(t_container *conUl, unsigned long num)
 {
     int idx;
 ;
@@ -27,19 +42,4 @@ int get_unsign_str(t_container *conUl, unsigned long num)
     }
     (conUl -> str)[idx] = '\0';
     return (idx);
-}
-
-void    print_unsigned_int(unsigned long num, int *opt)
-{
-    t_container conUl;
-    int num_len;
-
-    init_container(&conUl);
-    num_len = get_unsign_str(&conUl, num);
-    conUl.zero_len = get_zero(num_len, opt, conUl.sign);
-    conUl.space_len = get_space(conUl, opt, num_len);
-    if (opt[minus])
-        left_align(conUl, num_len);
-    else
-        right_align(conUl, num_len);
 }

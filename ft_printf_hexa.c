@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_hexa.c                                      :+:      :+:    :+:   */
+/*   ft_printf_hexa.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:15:23 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/26 17:19:26 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/27 16:38:54 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void    get_hexa_sign(t_container *conUl, int shop)
     }
 }
 
-void    print_sixteen(unsigned int hexa, int *opt)
+int print_hexa(unsigned long hexa, int *opt)
 {
     t_container conUl;
     int num_len;
@@ -52,11 +52,11 @@ void    print_sixteen(unsigned int hexa, int *opt)
     num_len = get_hexa_str(&conUl, hexa, opt[type]);
     get_hexa_sign(&conUl, opt[shop]);
     conUl.zero_len = get_zero(num_len, opt, conUl.sign);
-    conUl.space_len = get_space(conUl, opt, num_len);
+    conUl.space_len = get_space_for_num(conUl, opt, num_len);
     if (opt[minus])
-        left_align(conUl, num_len);
+        return (left_align(conUl, num_len));
     else
-        right_align(conUl, num_len);
+        return (right_align(conUl, num_len));
 }
 
 
@@ -69,7 +69,7 @@ void    print_sixteen(unsigned int hexa, int *opt)
 //     num_len = get_hexa_str(&conUl, addr, opt[type]);
 //     get_hexa_sign(&conUl, 1);//opt[shop] = 1 대입
 //     conUl.zero_len = get_zero(num_len, opt, conUl.sign);
-//     conUl.space_len = get_space(conUl, opt, num_len);
+//     conUl.space_len = get_space_for_num(conUl, opt, num_len);
 //     if (opt[minus])
 //         left_align(conUl, num_len);
 //     else

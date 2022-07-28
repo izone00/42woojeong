@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf_util.c                                      :+:      :+:    :+:   */
+/*   ft_printf_util.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:05:48 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/26 17:20:54 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/27 16:38:54 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int get_zero(int num_len, int *opt, int *sign)
         return (0); 
 }
 
-int get_space(t_container conInt, int *opt, int num_len)
+int get_space_for_num(t_container conInt, int *opt, int num_len)
 {
     int word_len;
 
@@ -62,41 +62,38 @@ int get_space(t_container conInt, int *opt, int num_len)
         return (0);
 }
 
-void    right_align(t_container conInt, int len)
+int sum_len(t_container con, int num_len)
 {
-    int idx;
-    while ((conInt.space_len)--)
-        write(1, " ", 1);
-    if (conInt.sign[0] != 0)
-        write(1, &(conInt.sign[0]), 1);
-    if (conInt.sign[1] != 0)
-        write(1, &(conInt.sign[1]), 1);
-    while ((conInt.zero_len)--)
-        write(1, "0", 1);
-    idx = len - 1; //인덱스를 끝에서 부터 시작해 반대로 출력한다.
-    while (idx >= 0)
-    {
-        write(1, conInt.str + idx, 1); 
-        idx --;
-    }
+    int total_len;
+
+    total_len = 0;
+    total_len += con.space_len;
+    total_len += con.sign[0] + con.sign[1];
+    total_len += con.zero_len;
+    total_len += num_len;
+    return (total_len);
 }
 
-void    left_align(t_container conInt, int len)
+int right_align(t_container con, int num_len)
 {
-    int idx;
+    int total_len;
 
-    if (conInt.sign[0] != 0)
-        write(1, &(conInt.sign[0]), 1);
-    if (conInt.sign[1] != 0)
-        write(1, &(conInt.sign[1]), 1);
-    while ((conInt.zero_len)--)
-        write(1, "0", 1);
-    idx = len - 1; //인덱스를 끝에서 부터 시작해 반대로 출력한다.
-    while (idx >= 0)
-    {
-        write(1, conInt.str + idx, 1); 
-        idx --;
-    }
-    while ((conInt.space_len)--)
-        write(1, " ", 1);
+    total_len = sum_len(con, num_len);
+    put_space(con.space_len);
+    put_sign(con.sign);
+    put_zero(con.zero_len);
+    put_str_rev(con.str, num_len);
+    return (total_len);
+}
+
+int left_align(t_container con, int num_len)
+{
+    int total_len;
+
+    total_len = sum_len(con, num_len);
+    put_sign(con.sign);
+    put_zero(con.zero_len);
+    put_str_rev(con.str, num_len);
+    put_space(con.space_len);
+    return (total_len);
 }
