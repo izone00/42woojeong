@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 18:53:04 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/28 19:24:10 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/28 20:31:58 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,34 @@
 
 int check_fd_remain_box(t_fd_list **remain_box, char *remain_str,int fd)
 {
-    t_td_list   *box;
+    t_fd_list   *box;
     int         remain_len;
 
     if (*remain_box == NULL)
     {
-        if (new_fd_box(fd, remain_box) == '-1')//(-1)은 mem_err
+        // printf("[remain_box is NULL]\n");
+        if (new_fd_box(fd, remain_box) == (-1))//(-1)은 mem_err
             return (-1);
         box = *remain_box;
+        // printf("[fd : %d, next : %d]\n", box -> fd, (box -> next) == NULL);
     }
     else
     {
+        // printf("[remain_box is NEW]\n");
         box = *remain_box;
         if(!search_fd_in_box(&box, fd))
         {
-            if (new_fd_box(fd, &(box -> next)))
+            // printf("[new fd : %d]\n", fd);
+            if (new_fd_box(fd, &(box -> next)) == (-1))
                 return (-1);
+            box = box -> next;
         }
     }
     remain_len = pull_from_box(remain_str, box);
+    // printf("[remain_str : (%s)]\n", remain_str);
     return (remain_len);
 }
 //remain_str에 복사해주고 box도 수정해준다
-
 int pull_from_box(char *remain_str, t_fd_list *box)
 {
     int len;
@@ -53,14 +58,14 @@ int pull_from_box(char *remain_str, t_fd_list *box)
         }
         len++;
     }
-    remain[len] ='\0';
+    remain_str[len] ='\0';
     dest = 0;
     while ((box -> str)[len + dest])
     {
         (box -> str)[dest] = (box -> str)[len + dest];
         dest++;
     }
-    (box -> str)[dest] = '\0'
+    (box -> str)[dest] = '\0';
     return (len);
 }
 
@@ -74,7 +79,7 @@ int new_fd_box(int fd, t_fd_list **box)
     ((*box) -> str)[0] = '\0';
     return (1);
 }
-void    fd_free(int fd, t_fd_list **remain_box)
+
 t_fd_list   *search_fd_in_box(t_fd_list **box, int fd)
 {
     while ((*box) -> next != NULL)
