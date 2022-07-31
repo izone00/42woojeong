@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:19:54 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/31 17:54:06 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:56:22 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@
 #include <unistd.h>
 
 typedef struct s_container {
-    int     sign[2]; 
-    char    str[30];     
-    int     zero_len;       
-    int     space_len;
+	int     sign[2]; 
+	char    str[30];     
+	int     zero_len;       
+	int     space_len;
 } t_container;
 
 enum    option {
-    minus = 0,
-    plus = 1,
-    zero = 2,
-    space = 3,
-    shop = 4,
-    width = 5,
-    precision = 6,
-    type = 7
+	minus = 0,
+	plus = 1,
+	zero = 2,
+	space = 3,
+	shop = 4,
+	width = 5,
+	precision = 6,
+	type = 7
 };
 //ft_printf
 int     ft_printf(const char *str, ...);
