@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:19:54 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/27 16:57:59 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:54:06 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,16 @@ int     get_zero(int num_len, int *opt, int *sign);
 int     get_space_for_num(t_container conInt, int *opt, int num_len);
 int     left_align(t_container conInt, int len);
 int     right_align(t_container conInt, int len);
-int     sum_len(t_container con, int num_len);
 //ft_printf_int
 int     print_int(int num, int *opt);
 int     get_int_sign(int *opt, int num);
 int     get_int_str(t_container *conInt, int num);
 //ft_printf_undigned
-int     print_unsigned_int(unsigned long num, int *opt);
-int     get_unsigned_str(t_container *conUl, unsigned long num);
+int     print_unsigned_int(unsigned int num, int *opt);
+int     get_unsigned_str(t_container *conUl, unsigned int num);
 //ft_printf_util
-int     print_hexa(unsigned long hexa, int *opt);
-int     get_hexa_str(t_container *conUl, unsigned long hexa, int type);
+int     print_hexa(unsigned long long hexa, int *opt);
+int     get_hexa_str(t_container *conUl, unsigned long long hexa, int type);
 void    get_hexa_sign(t_container *conUl, int shop);
 //ft_printf_str
 int     print_char(char ch, int *opt);
@@ -68,6 +67,7 @@ int     ft_strlen(const char *str);
 int     get_space_for_str(int str_len, int *opt);
 void    put_str(int *opt, char *str, int str_len, int space_len);
 //ft_printf_put_num
+int     sum_len(t_container con, int num_len);
 void    put_space(int len);
 void    put_sign(int *sign);
 void    put_zero(int len);

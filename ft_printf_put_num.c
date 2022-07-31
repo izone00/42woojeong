@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_put_option.c                                    :+:      :+:    :+:   */
+/*   ft_printf_put_num.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 13:32:34 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/27 13:33:51 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:53:05 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_lib.h"
+
+int sum_len(t_container con, int num_len)
+{
+    int total_len;
+
+    total_len = 0;
+    total_len += con.space_len;
+    total_len += con.sign[0] + con.sign[1];
+    total_len += con.zero_len;
+    total_len += num_len;
+    return (total_len);
+}
 
 void    put_space(int len)
 {

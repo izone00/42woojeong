@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:05:48 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/27 16:38:54 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:53:26 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,38 +41,30 @@ int get_zero(int num_len, int *opt, int *sign)
     {
         num_len += (sign[0] != 0);//부호의 첫칸
         num_len += (sign[1] != 0);//부호의 두번째칸 16진수에서 사용됨
-        return (opt[width] - num_len);
+        if (opt[width] > num_len)
+            return (opt[width] - num_len);
+        else
+            return (0);
     }
     else //정확도에 대한 정보가없고 '0'flag가쓰이지않을때
         return (0); 
 }
 
-int get_space_for_num(t_container conInt, int *opt, int num_len)
+int get_space_for_num(t_container con, int *opt, int num_len)
 {
     int word_len;
 
     word_len = 0;
     word_len += num_len;
-    word_len += (conInt.sign[0] != 0);
-    word_len += (conInt.sign[1] != 0);
-    word_len += conInt.zero_len;
+    word_len += (con.sign[0] != 0);
+    word_len += (con.sign[1] != 0);
+    word_len += con.zero_len;
     if (word_len < opt[width])
         return (opt[width] - word_len);
     else
         return (0);
 }
 
-int sum_len(t_container con, int num_len)
-{
-    int total_len;
-
-    total_len = 0;
-    total_len += con.space_len;
-    total_len += con.sign[0] + con.sign[1];
-    total_len += con.zero_len;
-    total_len += num_len;
-    return (total_len);
-}
 
 int right_align(t_container con, int num_len)
 {
