@@ -12,3 +12,13 @@ typedef struct  s_fd_list{
     char    str[BUFF_SIZE + 1];
     struct  s_fd_list *next;
 } t_fd_list;
+
+int read_until_nl(t_read *p_lst, t_fd_list *cur_fd, int fd, int *line_len);
+int	read_free(t_read lst);
+int	new_fd(int fd, t_fd_list **p_cur);
+t_fd_list	*find_fd(t_fd_list **p_fd_lst, int fd);
+int	cpy_until_nl(char *dest, char *src);
+void	update_fd(char *dest, char *src);
+void	fd_free(t_fd_list **p_fd_lst, int fd);
+char	*make_new_line(t_read lst, int line_len);
+char *get_next_line(int fd);
