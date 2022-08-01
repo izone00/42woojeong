@@ -6,40 +6,40 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 17:07:09 by woojeong          #+#    #+#             */
-/*   Updated: 2022/07/27 16:38:54 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/07/31 17:56:45 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf_lib.h"
 
-int print_unsigned_int(unsigned long num, int *opt)
+int print_unsigned_int(unsigned int num, int *opt)
 {
-    t_container conUl;
-    int num_len;
+	t_container ul_con;
+	int num_len;
 
-    init_container(&conUl);
-    num_len = get_unsigned_str(&conUl, num);
-    conUl.zero_len = get_zero(num_len, opt, conUl.sign);
-    conUl.space_len = get_space_for_num(conUl, opt, num_len);
-    if (opt[minus])
-        return (left_align(conUl, num_len));
-    else
-        return (right_align(conUl, num_len));
+	init_container(&ul_con);
+	num_len = get_unsigned_str(&ul_con, num);
+	ul_con.zero_len = get_zero(num_len, opt, ul_con.sign);
+	ul_con.space_len = get_space_for_num(ul_con, opt, num_len);
+	if (opt[minus])
+		return (left_align(ul_con, num_len));
+	else
+		return (right_align(ul_con, num_len));
 }
 
-int get_unsigned_str(t_container *conUl, unsigned long num)
+int get_unsigned_str(t_container *ul_con, unsigned int num)
 {
-    int idx;
+	int idx;
 ;
-    idx = 0;
-    if (num == 0)
-        (conUl -> str)[idx++] = '0';
-    while (num)
-    {
-        (conUl -> str)[idx] = (num % 10) + '0';//거꾸로 넣는다. 출력할때 거꾸로 해야됨
-        num /= 10;
-        idx++;
-    }
-    (conUl -> str)[idx] = '\0';
-    return (idx);
+	idx = 0;
+	if (num == 0)
+		(ul_con -> str)[idx++] = '0';
+	while (num)
+	{
+		(ul_con -> str)[idx] = (num % 10) + '0';//거꾸로 넣는다. 출력할때 거꾸로 해야됨
+		num /= 10;
+		idx++;
+	}
+	(ul_con -> str)[idx] = '\0';
+	return (idx);
 }
