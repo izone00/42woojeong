@@ -10,71 +10,68 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+fd_box 만들기
+dup str to read_list 
+update fd_box -> str
+read file
+update fd_box -> str
+dup str to line
+*/
 #include "ex_get_next_line.h"
 
 char    *get_next_line(int fd)  
 {
-    static      t_fd_list *remain_box;//이전에 남은 remain들의 box 자동으로 '0'초기화
-    // char        remain_str[BUFF_SIZE + 1];//해당 fd에서 가져온 remain을 담은 str
+    static      t_fd_list *remain_box;
     t_read_list read_list;
-    //char        *line;
     int         line_len;
 
-    //사용할 remain이 있는지, 새로운 fd_box를 만들지, 원하는 만큼 from_remain에 복사 해둔다, remain_box를 수정한다.
-    // printf("[box addr : %p]\n",remain_box);
     (read_list.str)[0] = '\0';
     read_list.next = NULL;
-    line_len = check_fd_remain_box(&remain_box, read_list.str, fd);
+    // new fd box 생성 box -> str 을 수정하기 위해 주소 전달
+    line_len = check_fd_remain_box(&remain_box, read_list.str, fd);// malloc current fd_box
     if (line_len == (-1))
-    {
-        // printf("[mem_err]\n");
         return (NULL);
-    }
-
-    //실행후에는 remain_box에서 정보를 사용하고 수정되어있고 from_remain에는 사용할 문자열이 담긴다.
-    if (line_len == 0 || (read_list.str)[line_len - 1] != '\n')//엔터키가 없어 더 읽어야한다면
+    if (line_len == 0 || (read_list.str)[line_len - 1] != '\n')
     {
-        if (read_file_until_nl(fd, &line_len, &remain_box, &read_list) == (-1))
+        //line_len 수정을위해 주소 전달, reamin_box 수정, free를 위해 전달, read_list 수정을 위해 전달
+        if (read_file_until_nl(fd, &line_len, &remain_box, &read_list) == (-1)) // free current fd_box when read err, malloc read_list
             return (NULL);
     }
-    printf("[line_len : %d]\n", line_len);
     if (line_len == 0)
         return (NULL);
-    //위 함수들이 실행된 이후에는 최종 line의 길이, 이전 문자열, 새로 읽은 문자열 리스트가 설정되고 읽다가 남은 문자열을 box에 저장한다.
-    return (make_new_line(line_len, &read_list));
+    return (make_new_line(line_len, &read_list)); // free read_list
 }
-
-int read_file_until_nl(int fd, int *line_len, t_fd_list **remain_box, t_read_list *read_list)
+//input
+// fd : (good fd, bad fd, eof fd)
+// line_len(>=0) : (지금까지 읽은 길이)
+// remain_box : (현재 fd값에 해당하는 box를 malloc 받은 상태, str이 빈문자열인 상태)
+int read_file_until_nl(int fd, int *line_len, t_fd_list **p_remain_box, t_read_list *read_list)
 {
     char    buff[BUFF_SIZE];
     int         read_len;
     t_fd_list *cur_fd_box;
     t_read_list *cur_read;
 
-    cur_read = read_list;
-    // printf("[after box addr : %p]\n", *remain_box);
-    cur_fd_box = *remain_box;
-    cur_fd_box = search_fd_in_box(&cur_fd_box, fd);
-    // printf("[after box addr : %p]\n", *remain_box);
-    // printf("[cur fd : %d]\n", cur_fd_box -> fd);
-    while (0 < (read_len = read(fd, buff, BUFF_SIZE)))
+    cur_read = read_list; // read_list free를 위해 시작점을 알고있어야함
+    cur_fd_box = *p_remain_box;
+    cur_fd_box = search_fd_in_box(&cur_fd_box, fd); ///////////////////////////////////불만
+    while (0 < (read_len = read(fd, buff, BUFF_SIZE))) // is good fd ?
     {
         *line_len += read_len;
-        // printf("[line : %d read : %d]\n", *line_len, read_len);
         cur_read -> next = (t_read_list *)malloc(sizeof(t_read_list));
         cur_read = cur_read -> next;
         if (cur_read == NULL)
-            return (read_free(read_list -> next));
+        {
+            fd_free(fd, p_remain_box); // 파일을 읽었는데 malloc 실패하면 이어지지 않으므로 남은게 의미없다.
+            return (read_free(read_list -> next)); // return (-1)
+        }
         (cur_read -> str)[0] = '\0';
         cur_read -> next  = NULL;
         if (cpy_until_nl(cur_read -> str, buff, cur_fd_box -> str, read_len))
-        {
-            // printf("[remain : (%s), read : (%s)]\n", cur_fd_box -> str, cur_read -> str);
-            return (1);//nl이 있었으면 1을 반환
-        }
+            return (1);
     }
-    printf("[read_len : %d fd : %d]\n", read_len, fd);
-    fd_free(fd, remain_box);// 밖으로 빼야할듯? ㄴㄴ
+    fd_free(fd, p_remain_box); // eof fd, bad fd, good fd(but 이 함수에서 파일을 끝까지 읽고 eof도달)
     return (1);
 }
 
@@ -101,36 +98,40 @@ char    *make_new_line(int line_len, t_read_list *read_list)
         line[idx] = '\0';
         cur_read = cur_read -> next;
     }
-    read_free(read_list -> next);// cpy함수 안에서 해도됨
+    read_free(read_list -> next);
     return (line);
 }
-
-int cpy_until_nl(char *str, char *buff, char *remain_str, int read_len)
+//input
+// read : 빈 문자열
+// buff : 읽은 문자들의 배열(!문자열)
+// remain : 현재 fd_box의 문자열(빈 문자열)
+// buff_len : buff배열 길이
+int cpy_until_nl(char *read, char *buff, char *remain, int buff_len)
 {
     int idx;
     int jdx;
 
     idx = 0;
-    while (idx < read_len)
+    while (idx < buff_len)
     {
-        str[idx] = buff[idx];
-        if (str[idx] == '\n')
+        read[idx] = buff[idx];
+        if (read[idx] == '\n')
         {
             jdx = 0;
             idx++;
-            str[idx] = '\0';
-            while (idx < read_len)
+            read[idx] = '\0';
+            while (idx < buff_len)
             {
-                remain_str[jdx] = buff[idx];
+                remain[jdx] = buff[idx];
                 idx++;
                 jdx++;
             }
-            remain_str[jdx] = '\0';
+            remain[jdx] = '\0';
             return (1);
         }
         idx++;
     }
-    str[idx] = '\0';
+    read[idx] = '\0';
     return (0);
 }
 
@@ -159,8 +160,8 @@ int main()
     fd1 = open("./test.txt", O_RDONLY);
     fd2 = open("./test2.txt", O_RDONLY);
     int fd3= open("./test3.txt", O_RDONLY);
-    if ((str = get_next_line(10)) == NULL)
-        printf("is NULL\n");
+    // if ((str = get_next_line(10)) == NULL)
+    //     printf("is NULL\n");
     while (i <= 8)
     {
         str = get_next_line(fd1);
