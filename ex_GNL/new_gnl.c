@@ -1,6 +1,14 @@
-
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   new_gnl.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/02 10:57:58 by woojeong          #+#    #+#             */
+/*   Updated: 2022/08/02 14:12:13 by woojeong         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 /*
 fd_box 만들기
@@ -143,15 +151,6 @@ char	*make_new_line(t_read lst, int line_len)
 
 
 
-
-
-
-
-
-
-
-
-
 #include <fcntl.h>
 int main()
 {
@@ -163,25 +162,26 @@ int main()
     fd1 = open("./test.txt", O_RDONLY);
     fd2 = open("./test2.txt", O_RDONLY);
     int fd3= open("./test3.txt", O_RDONLY);
+	int fd4 = open("./test4.txt", O_RDONLY);
     // if ((str = get_next_line(10)) == NULL)
     //     printf("is NULL\n");
-    while (i <= 8)
+    while (i <= 20)
     {
         str = get_next_line(fd1);
-        if (!str)
-            break;
-        printf("(fd1) %d: %s/\n", i, str);
+        printf("(fd1) %d: /%s/ ", i, str);
         //free(str);
         str = get_next_line(fd2);
-        if (!str)
-            break;
-        printf("(fd2) %d: %s/\n", i, str);
-        //free(str);
+        // if (!str)
+        //     break;
+        printf("(fd2) %d: /%s/ ", i, str);
+        // //free(str);
         str = get_next_line(fd3);
-        if (!str)
-            break;
-        printf("(fd3) %d: %s/\n", i, str);
+        // if (!str)
+        //     break;
+        printf("(fd3) %d: /%s/ ", i, str);
         //free(str);
+		str = get_next_line(fd4);
+		printf("(fd4) %d: /%s/ \n", i, str);
         i++;
     }
 }
