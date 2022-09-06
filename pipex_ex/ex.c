@@ -18,6 +18,7 @@ int	main()
 	int pid;
 	int stat;
 	int pipefd[2];
+	int pipefd2[2];
 
 	pipe(pipefd);
 	pid = fork();
@@ -53,6 +54,4 @@ int	main()
 	// read_len = read(fd2, buff, BUFF_SIZE);
 	// buff[read_len] = '\0';
 	// write(1, buff, read_len);
-
-
 }
