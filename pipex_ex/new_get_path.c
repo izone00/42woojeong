@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_path.c                                         :+:      :+:    :+:   */
+/*   new_get_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:16:15 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/06 18:11:06 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/08 20:04:43 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./pipe_ex.h"
+
 char	**get_path(char *envp[])
 {
 	int	idx;
@@ -27,9 +28,19 @@ char	**get_path(char *envp[])
 
 char	*get_file_path(char *file)
 {
+	char	*path;
+
 	if (file[0] =='/' && file[0] == '.')
-		return (ft_strdup(file));
-	return (ft_strjoin("./", file));
+	{
+		path = ft_strdup(file);
+		if (!path)
+			perror("zsh");
+		return (path);
+	}
+	path = ft_strjoin("./", file);
+	if (!path)
+		perror("zsh");
+	return (path);
 }
 
 char	*get_cmd_path(char *cmd, char *path[])
