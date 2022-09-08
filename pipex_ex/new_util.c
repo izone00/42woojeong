@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 15:24:37 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/08 20:30:40 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:41:20 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,21 @@
 // uniquely 1 -> pipefd[out][w], pipefd[out][r] open in success
 int	stdout_redir_pipe(int pipefd[2][2])
 {
+	int temp_out;
+	int temp_in;
+
 	if (pipe(pipefd[out]) < 0)
 		return (0);
+	//
+	temp_out = dup(pipefd[out][w]);
+	temp_in = dup(pipefd[out][r]);
+	close(pipefd[out][w]);
+	close(pipefd[out][r]);
+	pipefd[out][w] = temp_out;
+	pipefd[out][r] = temp_in;
+	// 
+	ft_putnbr_fd(pipefd[out][w], stdout_cpy);
+	ft_putnbr_fd(pipefd[out][r], stdout_cpy);
 	if (dup2(pipefd[out][w], 1) < 0)
 	{
 		close(pipefd[out][w]);

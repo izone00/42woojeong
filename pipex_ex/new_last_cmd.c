@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 18:54:55 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/08 20:33:32 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:42:01 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	short_exe_last_cmd(char *argv_i[], char *path[], int pipefd[2][2], char *env
 	char	**cmd_argv;
 	char	*cmd_path;
 
-	if (stdout_to_outfile(argv_i[1]))// uniquely 1 -> fd2 in success
+	if (!stdout_to_outfile(argv_i[1]))// uniquely 1 -> fd2 in success
 		return (0);
 	if (stdin_redir_pipe(pipefd)) // uniquely 0 -> pipefd[in][r] in success, always pipefd[in][r] is closed
 	{
@@ -60,6 +60,12 @@ int	stdout_to_outfile(char *filename)
 		perror("zsh");
 		free(file2);
 		return (0);
+	}
+	if (fd2 == 1 || fd2 == 0)
+	{
+		dup2(fd2, 100);
+		close(fd2);
+		fd2 = 100;
 	}
 	if (dup2(fd2, 1) < 0)
 	{

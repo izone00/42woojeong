@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 21:03:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/08 20:41:58 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:39:10 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int main(int argc, char *argv[], char *envp[])
 	path = get_path(envp);
 	if (path == 0) // path찾는중 에러
 	{exit(1);}
+	stdout_cpy = dup(1);
 	// int stdin_cpy = dup(0);
-	// int stdout_cpy = dup(1);
+	
 	if (!short_exe_first_cmd(argv + 1, path, pipefd, envp))
 	{
 		free(path);
 		exit(1);
 	}
-
 	int idx = 3;
 	while (idx < argc - 2)
 	{
