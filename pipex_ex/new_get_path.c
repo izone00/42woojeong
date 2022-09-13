@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:16:15 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/08 20:04:43 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/13 18:59:06 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,22 @@
 
 char	**get_path(char *envp[])
 {
-	int	idx;
+	int		idx;
+	char	**path;
 
 	idx = 0;
 	while (envp[idx])
 	{
 		if (!ft_strncmp("PATH=", envp[idx], 5))
-			return (ft_split(envp[idx], ':'));
+		{
+			path = ft_split(envp[idx], ':');
+			if (!path)
+				perror("zsh");
+			return (path);
+		}
 		idx++;
 	}
+	write(2, "no PATH", 7);
 	return (NULL);
 }
 
@@ -51,16 +58,13 @@ char	*get_cmd_path(char *cmd, char *path[])
 
 	temp = ft_strjoin("/", cmd);
 	if (!temp)
-		return (NULL);
+		return (err_malloc());
 	idx = 0;
 	while (path[idx])
 	{
 		cmd_path = ft_strjoin(path[idx], temp);
 		if (!cmd_path)
-		{
-			free(temp);
-			return (NULL);
-		}
+			return (err_malloc_free(&temp));
 		if (!access(cmd_path, F_OK))
 			break;
 		free(cmd_path);
@@ -68,6 +72,6 @@ char	*get_cmd_path(char *cmd, char *path[])
 	}
 	free(temp);
 	if (!path[idx])
-		return (NULL);
+		return (cmd_not_found(cmd));
 	return (cmd_path);
 }

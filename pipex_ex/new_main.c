@@ -6,38 +6,41 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 21:03:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/08 21:39:10 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/13 20:49:06 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./pipe_ex.h"
-
+//exit 0 : out파일이 있다. 1 : out파일이 없다.
 int main(int argc, char *argv[], char *envp[])
 {
 	int		pipefd[2][2];
 	char	**path;
 
 	if (argc < 5) //인자 부족
-	{exit(1);}
+		argc_err();
 	path = get_path(envp);
 	if (path == 0) // path찾는중 에러
-	{exit(1);}
+		exit(1);		
 	stdout_cpy = dup(1);
-	// int stdin_cpy = dup(0);
-	
-	if (!short_exe_first_cmd(argv + 1, path, pipefd, envp))
-	{
-		free(path);
-		exit(1);
-	}
+	if (!ft_strncmp(argv[1], "here_doc", 9))
+		here_doc(argv + 2, &path, pipefd, envp)
+	if (!file_cmd_pipe(argv + 1, path, pipefd, envp))
+		err(&path);
 	int idx = 3;
 	while (idx < argc - 2)
 	{
-		short_exe_middle_cmd(argv + idx, path, pipefd, envp);
+		if (!pipe_cmd_pipe(argv + idx, path, pipefd, envp))
+			err(&path);
 		idx++;
 	}
-	short_exe_last_cmd(argv + argc - 2, path, pipefd, envp);
+	if (!pipe_cmd_file(argv + argc - 2, path, pipefd, envp))
+		err(&path);
+	exit(0);
 }
 
-// file1이 없거나 권한이 없으면 다음 cmd로
-//systemcall 실패 = exit(1);
+static void	err(char **path[])
+{
+	free(*path); // path free 함수가 필요하다.
+	exit(1);
+}
