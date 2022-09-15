@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_util.c                                         :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 15:24:37 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/13 20:49:04 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/15 16:43:59 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,17 @@ int	exe_cmd(char *cmd_path, char **cmd_argv, char *envp[])
 		}
 	}
 	return (1);
+}
+
+void	path_free(char *path[])
+{
+	int	idx;
+
+	idx = 0;
+	while (path[idx])
+	{
+		free(path[idx]);
+		idx++;
+	}
+	free(path);
 }

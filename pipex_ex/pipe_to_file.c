@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_heredoc_last_cmd.c                             :+:      :+:    :+:   */
+/*   pipe_to_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/13 15:43:46 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/13 20:51:29 by woojeong         ###   ########.fr       */
+/*   Created: 2022/09/13 20:47:16 by woojeong          #+#    #+#             */
+/*   Updated: 2022/09/15 16:44:30 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipe_ex.h"
 
-int	heredoc_last_cmd(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+int	pipe_to_file(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
 {
 	char	**cmd_argv;
 	char	*cmd_path;
 
-	if (!stdout_redir_outfile(argv_i[1], 1) || !offset_eof())// uniquely 1 -> fd2 in success
+	if (!stdout_redir_outfile(argv_i[1], 0))// uniquely 1 -> fd2 in success
 	{
 		close(pipefd[in][r]);
 		return (0);
@@ -35,16 +35,4 @@ int	heredoc_last_cmd(char *argv_i[], char *path[], int pipefd[2][2], char *envp[
 	}
 	close(1);
 	return (1);// there is no custom descriptor
-}
-
-int offset_eof()
-{
-	char	buff[10];
-	int		read_len;
-	
-	while (0 < (read_len = read(1, buff, BUFFER_SIZE)))
-		;
-	if (read_len < 0)
-		return (0);
-	return (1);
 }

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_middle_cmd.c                                   :+:      :+:    :+:   */
+/*   pipe_cmd_pipe.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 18:54:32 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/13 20:46:00 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/15 16:45:01 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipe_ex.h"
 
-int pipe_cmd_pipe(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+int pipe_to_pipe(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
 {
 	char	**cmd_argv;
 	char	*cmd_path;
