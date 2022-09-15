@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 15:25:39 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/15 16:58:07 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/15 19:11:25 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ static int	read_until_limiter(char *limiter, int pipefd[2][2])
 static int	err(int fd)
 {
 	perror("zsh");
+	write(2, "\n", 1);
 	close(fd);
 	return (1);
 }
@@ -63,6 +64,7 @@ static int	err(int fd)
 static int	err2(char *limit, int fd)
 {
 	perror("zsh");
+	write(2, "\n", 1);
 	close(fd);
 	free(limit);
 	return (0);
@@ -71,6 +73,7 @@ static int	err2(char *limit, int fd)
 static int	err3(char *limit, char *line, int fd)
 {
 	perror("zsh");
+	write(2, "\n", 1);
 	close(fd);
 	free(limit);
 	free(line);

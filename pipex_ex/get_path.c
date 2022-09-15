@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:16:15 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/15 17:04:32 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/15 19:11:44 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,14 @@ char	*get_cmd_path(char *cmd, char *path[])
 static char	*err()
 {
 	perror("zsh");
+	write(2, "\n", 1);
 	return (NULL);
 }
 
 static char	*err2(char *temp)
 {
 	perror("zsh");
+	write(2, "\n", 1);
 	free(temp);
 	return (NULL);
 }
@@ -97,5 +99,6 @@ static char	*cmd_not_found(char *cmd)
 {
 	write(2, "zsh: command not found: ", 24);
 	write(2, cmd, ft_strlen(cmd));
+	write(2, "\n", 1);
 	return (NULL);
 }

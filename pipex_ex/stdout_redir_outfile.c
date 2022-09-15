@@ -32,21 +32,24 @@ int	stdout_redir_outfile(char *filename, int is_heredoc)
 
 static int err_unlink(char *file2)
 {
-	perror("zsh");
+	perror("zsh4");
+	write(2, "\n", 1);
 	free(file2);
 	return (0);
 }
 
 static int	err_open(char *file2)
 {
-	perror("zsh");
+	perror("zsh5");
+	write(2, "\n", 1);
 	free(file2);
 	return (0);
 }
 
 static int err_dup2(char *file2, int fd2)
 {
-	perror("zsh");
+	perror("zsh6");
+	write(2, "\n", 1);
 	close(fd2);
 	free(file2);
 	return (0);

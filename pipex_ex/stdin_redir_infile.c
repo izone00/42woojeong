@@ -30,22 +30,25 @@ int	stdin_redir_infile(char *filename)
 
 static int	err_access(char *file1, char *filename)
 {
-	perror("zsh");
+	perror("zsh1");
 	ft_putstr_fd(filename, 2);
+	write(2, "\n", 1);
 	free(file1);
 	return (0);
 }
 
 static int	err_open(char *file1)
 {
-	perror("zsh");
+	perror("zsh2");
+	write(2, "\n", 1);
 	free(file1);
 	return (0);
 }
 
 static int err_dup2(char *file1, int fd1)
 {
-	perror("zsh");
+	perror("zsh3");
+	write(2, "\n", 1);
 	close(fd1);
 	free(file1);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 21:03:28 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/15 17:02:37 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/15 18:49:31 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ enum pipe_num {
 };
 //temp
 int stdout_cpy;
+void	ft_putnbr_fd(int n, int fd);
+
 //gnl
 char	*get_next_line(int fd);
 //libft
-void	ft_putnbr_fd(int n, int fd);
 int		ft_putstr_fd(char *str, int fd);
 char	**ft_split(char const *s, char c);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
