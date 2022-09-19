@@ -1,38 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_to_file.c                                     :+:      :+:    :+:   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/13 20:47:16 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Created: 2022/07/09 20:42:06 by woojeong          #+#    #+#             */
+/*   Updated: 2022/07/09 20:42:06 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
+#include "libft.h"
 
-int	pipe_to_file(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	char	**cmd_argv;
-	char	*cmd_path;
+	t_list	*new;
+	t_list	*start;
 
-	if (!stdout_redir_outfile(argv_i[1], 0))
-	{
-		close(pipefd[in][r]);
+	if (lst == 0)
 		return (0);
-	}
-	if (stdin_redir_pipe(pipefd))
+	new = ft_lstnew(f(lst -> content));
+	if (new == 0)
+		return (0);
+	start = new;
+	lst = lst -> next;
+	while (lst != 0)
 	{
-		if (make_exe_param(&cmd_argv, &cmd_path, argv_i[0], path))
+		new -> next = ft_lstnew(f(lst -> content));
+		new = new -> next;
+		if (new == 0)
 		{
-			if (exe_cmd(cmd_path, cmd_argv, envp))
-				wait(NULL);
-			free(cmd_path);
-			free(cmd_argv);
+			ft_lstclear(&start, del);
+			return (0);
 		}
-		close(0);
+		lst = lst -> next;
 	}
-	close(1);
-	return (1);
+	return (start);
 }

@@ -15,14 +15,13 @@ SOURS = main.c pipe_to_file.c pipe_to_file_eof.c pipe_to_pipe.c\
 		read_by_heredoc.c redir_pipe.c stdin_redir_infile.c\
 		stdout_redir_outfile.c util.c get_path.c file_to_pipe.c\
 		here_doc.c
-NAME = pipe
-LIB = libft.a
+NAME = pipex
+LIB = ./libft_ex/libft.a
 
-all: 			
-			cc ${CFLAGS} ${SOURS} ${LIB} -o ${NAME}
 
-bonus:
-			make BONUS_SIGN=1 all
+all:
+			cd libft_ex
+		##	cc ${CFLAGS} ${SOURS} ${LIB} -o ${NAME}
 
 clean:
 			rm -f ${OBJS} ${B_OBJS}

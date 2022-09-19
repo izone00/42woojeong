@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/13 14:50:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Created: 2022/07/09 20:36:46 by woojeong          #+#    #+#             */
+/*   Updated: 2022/07/09 20:36:46 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
+#include "libft.h"
 
-static void	err(char *path[]);
-
-int	here_doc(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	if (!read_by_heredoc(argv_i[0], pipefd))
-		err(path);
-	if (!pipe_to_pipe(argv_i + 1, path, pipefd, envp))
-		err(path);
-	if (!pipe_to_file_eof(argv_i + 2, path, pipefd, envp))
-		err(path);
-	path_free(path);
-	exit(0);
-}
+	t_list	*ptr;
+	t_list	*last;
 
-static void	err(char *path[])
-{
-	path_free(path);
-	exit(1);
+	if (lst == 0)
+		return ;
+	ptr = *lst;
+	while (ptr != 0)
+	{
+		last = ptr;
+		del(ptr -> content);
+		ptr = ptr -> next;
+		free(last);
+	}
+	(*lst) = 0;
 }

@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/13 14:50:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Created: 2022/07/09 20:45:22 by woojeong          #+#    #+#             */
+/*   Updated: 2022/07/09 20:45:23 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
+#include "libft.h"
 
-static void	err(char *path[]);
-
-int	here_doc(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	if (!read_by_heredoc(argv_i[0], pipefd))
-		err(path);
-	if (!pipe_to_pipe(argv_i + 1, path, pipefd, envp))
-		err(path);
-	if (!pipe_to_file_eof(argv_i + 2, path, pipefd, envp))
-		err(path);
-	path_free(path);
-	exit(0);
-}
+	unsigned int	i;
+	char			*str;
 
-static void	err(char *path[])
-{
-	path_free(path);
-	exit(1);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	str = (char *)malloc(sizeof(char) * (i + 1));
+	if (str == 0)
+		return (0);
+	i = 0;
+	while (s[i] != '\0')
+	{
+		str[i] = f(i, s[i]);
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }

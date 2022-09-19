@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/13 14:50:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Created: 2022/07/09 20:45:35 by woojeong          #+#    #+#             */
+/*   Updated: 2022/07/09 20:45:35 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
-
-static void	err(char *path[]);
-
-int	here_doc(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+char	*ft_strrchr(const char *s, int c)
 {
-	if (!read_by_heredoc(argv_i[0], pipefd))
-		err(path);
-	if (!pipe_to_pipe(argv_i + 1, path, pipefd, envp))
-		err(path);
-	if (!pipe_to_file_eof(argv_i + 2, path, pipefd, envp))
-		err(path);
-	path_free(path);
-	exit(0);
-}
+	int		i;
 
-static void	err(char *path[])
-{
-	path_free(path);
-	exit(1);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	while (i >= 0)
+	{
+		if (s[i] == (char)c)
+			return ((char *)(s + i));
+		i--;
+	}
+	return (0);
 }

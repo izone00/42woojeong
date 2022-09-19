@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/13 14:50:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Created: 2022/07/09 20:42:19 by woojeong          #+#    #+#             */
+/*   Updated: 2022/07/09 20:43:48 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
+#include "libft.h"
 
-static void	err(char *path[]);
-
-int	here_doc(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
+void	*ft_memchr(const void *str, int ch, size_t n)
 {
-	if (!read_by_heredoc(argv_i[0], pipefd))
-		err(path);
-	if (!pipe_to_pipe(argv_i + 1, path, pipefd, envp))
-		err(path);
-	if (!pipe_to_file_eof(argv_i + 2, path, pipefd, envp))
-		err(path);
-	path_free(path);
-	exit(0);
-}
+	size_t	i;
 
-static void	err(char *path[])
-{
-	path_free(path);
-	exit(1);
+	i = 0;
+	while (i < n)
+	{
+		if (((unsigned char *)str)[i] == (unsigned char)ch)
+			return ((unsigned char *)(str + i));
+		i++;
+	}
+	return (0);
 }

@@ -6,11 +6,11 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 15:25:39 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/15 19:11:25 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipe_ex.h"
+#include "ft_pipex.h"
 
 static int	err(int fd);
 static int	err2(char *limit, int fd);
@@ -21,11 +21,11 @@ int	read_by_heredoc(char *limiter, int pipefd[2][2])
 {
 	if (pipe(pipefd[in]) < 0)
 		return (0);
-	limiter = ft_strjoin(limiter, "\n"); //malloc
+	limiter = ft_strjoin(limiter, "\n");
 	if (!limiter)
 		return (err(pipefd[in][w]));
-	if (read_until_limiter(limiter, pipefd))
-		return (1);
+	if (!read_until_limiter(limiter, pipefd))
+		return (0);
 	close(pipefd[in][w]);
 	return (1);
 }
@@ -40,7 +40,7 @@ static int	read_until_limiter(char *limiter, int pipefd[2][2])
 	while (line != NULL)
 	{
 		if (!strncmp(line, limiter, ft_strlen(limiter)))
-			break;
+			break ;
 		if (ft_putstr_fd(line, pipefd[in][w]) < 0)
 			return (err3(limiter, line, pipefd[in][w]));
 		free(line);

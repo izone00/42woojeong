@@ -6,15 +6,14 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 17:16:15 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/15 19:11:44 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/19 19:01:20 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./pipe_ex.h"
+#include "ft_pipex.h"
 
-static char	*err();
+static char	*err(void);
 static char	*err2(char *temp);
-static char	*cmd_not_found(char *cmd);
 
 char	**get_path(char *envp[])
 {
@@ -26,7 +25,7 @@ char	**get_path(char *envp[])
 	{
 		if (!ft_strncmp("PATH=", envp[idx], 5))
 		{
-			path = ft_split(envp[idx], ':');
+			path = ft_split(envp[idx] + 5, ':');
 			if (!path)
 				perror("zsh");
 			return (path);
@@ -41,14 +40,14 @@ char	*get_file_path(char *file)
 {
 	char	*path;
 
-	if (file[0] =='/' && file[0] == '.')
+	if (file[0] == '/' && file[0] == '.')
 	{
-		path = ft_strdup(file); // malloc
+		path = ft_strdup(file);
 		if (!path)
 			perror("zsh");
 		return (path);
 	}
-	path = ft_strjoin("./", file); // malloc
+	path = ft_strjoin("./", file);
 	if (!path)
 		perror("zsh");
 	return (path);
@@ -70,7 +69,7 @@ char	*get_cmd_path(char *cmd, char *path[])
 		if (!cmd_path)
 			return (err2(temp));
 		if (!access(cmd_path, F_OK))
-			break;
+			break ;
 		free(cmd_path);
 		idx++;
 	}
@@ -80,7 +79,7 @@ char	*get_cmd_path(char *cmd, char *path[])
 	return (cmd_path);
 }
 
-static char	*err()
+static char	*err(void)
 {
 	perror("zsh");
 	write(2, "\n", 1);
@@ -92,13 +91,5 @@ static char	*err2(char *temp)
 	perror("zsh");
 	write(2, "\n", 1);
 	free(temp);
-	return (NULL);
-}
-
-static char	*cmd_not_found(char *cmd)
-{
-	write(2, "zsh: command not found: ", 24);
-	write(2, cmd, ft_strlen(cmd));
-	write(2, "\n", 1);
 	return (NULL);
 }
