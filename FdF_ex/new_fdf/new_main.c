@@ -2,16 +2,13 @@
 #include "./fdf.h"
 
 
-int key_hook(int keycode, void *param);
-
 int	main(int argc, char *argv[])
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	void	*img_ptr;
+	t_pen	pen;
+	t_ptr	ptr;
 	t_point	**axis;
+	t_point	**o_map;
 	t_img	img;
-	void	*param;
 
 	//argv err
 	if (argc != 2)
@@ -20,8 +17,8 @@ int	main(int argc, char *argv[])
 		exit(1);
 	}
 	//init
-	mlx_ptr = mlx_init();
-	if (!mlx_ptr)
+	ptr.mlx = mlx_init();
+	if (!ptr.mlx)
 	{
 		perror("zsh");
 		exit(1);
@@ -30,23 +27,39 @@ int	main(int argc, char *argv[])
 	axis = get_map_axis(argv[1], &img); // malloc
 	if (!axis)
 		exit(1);
-	// for (int y = 0; y < img.y_size; y++)
-	// {
-	// 	for (int x = 0; axis[y][x].x_pos >= 0; x++)
-	// 		printf("[%.0f,%.0f,%.0f]", axis[y][x].x_pos, axis[y][x].y_pos, axis[y][x].alt);
-	// 	printf("\n");
-	// }
 	//img
-	// change_img_scale(axis);
-	get_img_size(axis, &img);// x_size에 관한 상황을 처리
-	img_ptr = mlx_new_image(mlx_ptr, img.width, img.height);
-	img.addr = mlx_get_data_addr(img_ptr, &(img.bits_per_pixel), &(img.size_line), &(img.endian));
+	get_img_size(axis, &img);
+	// ft_printf("x_size : %d, y_size : %d\n", img.x_origin, img.y_origin);
+	// change_img_scale(axis, &img);
+	ptr.img = mlx_new_image(ptr.mlx, img.scale, img.scale);
+	img.addr = mlx_get_data_addr(ptr.img, &(img.bits_per_pixel), &(img.size_line), &(img.endian));
+	o_map = save_original_map(axis, &img);
+	get_img_origin(&img);
+	turn_x(axis, o_map, &img, (3.14 / 4));
+	turn_y(axis, o_map, &img, -acos(1 / sqrt(3)));
 	draw_img(axis, &img);
-	// //window
-	win_ptr = mlx_new_window(mlx_ptr, img.width*2, img.height*2, "new_title");
-	mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 10, 10);
-	// //event
-	// mlx_key_hook(win_ptr, key_hook, param);
-	mlx_loop(mlx_ptr);
+	//window
+	ptr.win = mlx_new_window(ptr.mlx, img.scale + 10, img.scale + 10, "new_title");
+	mlx_put_image_to_window(ptr.mlx, ptr.win, ptr.img, 10, 10);
+	// free
+	// free_point_arr(axis, img.y_size);
+	// mlx_destroy_image(ptr.mlx, ptr.img);
+	//event
+	pen.img = &img;
+	pen.ptr = &ptr;
+	pen.axis = axis;
+	pen.o_map = o_map;
+	mlx_mouse_hook (ptr.win, mouse_hook, &pen);
+	mlx_key_hook(ptr.win, rotate_key_hook, &pen);
+	// mlx_key_hook(ptr.win, esc_key_hook, &ptr);
+	mlx_loop(ptr.mlx);
 }
 
+//init_img 함수 만들기
+
+// for (int y = 0; y < img.y_size; y++)
+// 	{
+// 		for (int x = 0; x < img.x_size; x++)
+// 			printf("%0.1f %0.1f / ", o_map[y][x].x_pos, o_map[y][x].y_pos);
+// 		printf("\n");
+// 	}

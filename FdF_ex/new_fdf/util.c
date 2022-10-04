@@ -2,7 +2,7 @@
 
 void	free_point_arr(t_point **arr, int len)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < len)
@@ -15,7 +15,7 @@ void	free_point_arr(t_point **arr, int len)
 
 void	free_split(char **arr)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (arr[i])
