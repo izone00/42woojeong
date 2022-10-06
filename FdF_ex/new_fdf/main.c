@@ -1,12 +1,10 @@
-
 #include "./fdf.h"
-
 
 int	main(int argc, char *argv[])
 {
-	t_pen	pen;
+	t_param	param;
 	t_ptr	ptr;
-	t_point	**axis;
+	t_point	**coord;
 	t_point	**o_map;
 	t_img	img;
 
@@ -24,34 +22,51 @@ int	main(int argc, char *argv[])
 		exit(1);
 	}
 	//parse
-	axis = get_map_axis(argv[1], &img); // malloc
-	if (!axis)
+	coord = get_coordinate(argv[1], &img); // malloc : coord
+	if (img.map_err)
+	{
+		write(2, "wrong map\n", 10);
 		exit(1);
+	}
+	else if (!coord)
+	{
+		perror("zsh");
+		exit(1);
+	}
 	//img
-	get_img_size(axis, &img);
-	// ft_printf("x_size : %d, y_size : %d\n", img.x_origin, img.y_origin);
-	// change_img_scale(axis, &img);
+	get_img_scale(coord, &img);
 	ptr.img = mlx_new_image(ptr.mlx, img.scale, img.scale);
 	img.addr = mlx_get_data_addr(ptr.img, &(img.bits_per_pixel), &(img.size_line), &(img.endian));
-	o_map = save_original_map(axis, &img);
-	get_img_origin(&img);
-	turn_x(axis, o_map, &img, (3.14 / 4));
-	turn_y(axis, o_map, &img, -acos(1 / sqrt(3)));
-	draw_img(axis, &img);
+	o_map = save_original_map(coord, &img);
+	if (!o_map)
+	{
+		free_point_arr(coord, img.y_size);
+		perror("zsh");
+		exit(1);
+	}
+	get_img_center_addr(&img);
+	turn_x(coord, o_map, &img, (3.14 / 4));
+	turn_y(coord, o_map, &img, -acos(1 / sqrt(3)));
+	draw_img(coord, &img);
 	//window
 	ptr.win = mlx_new_window(ptr.mlx, img.scale + 10, img.scale + 10, "new_title");
+	if (!ptr.win)
+	{
+		free_point_arr(coord, img.y_size);
+		free_point_arr(o_map, img.y_size);
+		perror("zsh");
+		exit(1);
+	}
 	mlx_put_image_to_window(ptr.mlx, ptr.win, ptr.img, 10, 10);
-	// free
-	// free_point_arr(axis, img.y_size);
+	// free_point_arr(coord, img.y_size);
 	// mlx_destroy_image(ptr.mlx, ptr.img);
 	//event
-	pen.img = &img;
-	pen.ptr = &ptr;
-	pen.axis = axis;
-	pen.o_map = o_map;
-	mlx_mouse_hook (ptr.win, mouse_hook, &pen);
-	mlx_key_hook(ptr.win, rotate_key_hook, &pen);
-	// mlx_key_hook(ptr.win, esc_key_hook, &ptr);
+	param.img = &img;
+	param.ptr = &ptr;
+	param.coord = coord;
+	param.o_map = o_map;
+	mlx_mouse_hook (ptr.win, mouse_hook, &param);
+	mlx_key_hook(ptr.win, key_hook, &param);
 	mlx_loop(ptr.mlx);
 }
 

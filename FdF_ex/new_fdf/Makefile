@@ -6,13 +6,14 @@
 #    By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/15 17:21:51 by woojeong          #+#    #+#              #
-#    Updated: 2022/10/04 21:12:12 by woojeong         ###   ########.fr        #
+#    Updated: 2022/10/06 16:49:50 by woojeong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FLAG = -lmlx -framework OpenGL -framework AppKit 
-SOURS = draw_img.c event.c get_img_size.c get_map.c new_main.c\
-		translate.c turn.c turn_event.c util.c
+SOURS = draw_img.c event.c get_img_scale.c get_map.c main.c\
+		translate.c turn.c turn_event.c util.c zoom.c get_map_utils.c\
+		draw_img_utils.c
 OBJS = ${SOURS:.c=.o}
 NAME = fdf
 LIB = ./libft_ex/libft.a
