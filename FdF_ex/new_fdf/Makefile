@@ -6,7 +6,7 @@
 #    By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/15 17:21:51 by woojeong          #+#    #+#              #
-#    Updated: 2022/10/06 16:49:50 by woojeong         ###   ########.fr        #
+#    Updated: 2022/10/11 17:28:06 by woojeong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,7 @@ LIB = ./libft_ex/libft.a
 all:		${NAME}
 
 ${NAME}:	${OBJS}	${LIB}
-			cc ${FLAG} ${SOURS} ${LIB} -o ${NAME}
-
+			cc  ${FLAG} ${SOURS} ${LIB} -o ${NAME}
 ${LIB}:
 			make -C "libft_ex" -f makefile
 

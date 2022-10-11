@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw_img.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/11 15:31:58 by woojeong          #+#    #+#             */
+/*   Updated: 2022/10/11 15:48:09 by woojeong         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./fdf.h"
 
 int	draw_img(t_point **coord, t_img *img)
@@ -51,14 +63,15 @@ void	draw_by_x(t_point *p1, t_point *p2, t_img *img)
 	alt_m = ((p2 -> alt) - (p1 -> alt)) / ((p2 -> x_pos) - (p1 -> x_pos));
 	while (x <= p2 -> x_pos)
 	{
-		grad = fabs(255 * ((p1 -> alt + alt_m * (x - p1 -> x_pos))\
-						 / img -> max_alt));
+		grad = fabs(255 * ((p1 -> alt + alt_m * (x - p1 -> x_pos)) \
+						/ img -> max_alt));
 		grad *= 0x00000101;
 		color_pixel(x, y, 0x00ff0000 + grad, img);
 		y += m;
 		x++;
 	}
 }
+
 void	draw_by_y(t_point *p1, t_point *p2, t_img *img)
 {
 	double	m;
@@ -73,8 +86,8 @@ void	draw_by_y(t_point *p1, t_point *p2, t_img *img)
 	alt_m = ((p2 -> alt) - (p1 -> alt)) / ((p2 -> y_pos) - (p1 -> y_pos));
 	while (y <= p2 -> y_pos)
 	{
-		grad = fabs(255 * ((p1 -> alt + alt_m * (y - p1 -> y_pos))\
-							 / img -> max_alt));
+		grad = fabs(255 * ((p1 -> alt + alt_m * (y - p1 -> y_pos)) \
+							/ img -> max_alt));
 		grad *= 0x00000101;
 		color_pixel(x, y, 0x00ff0000 + grad, img);
 		x += m;

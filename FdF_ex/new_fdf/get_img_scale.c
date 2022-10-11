@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_img_scale.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/11 15:32:03 by woojeong          #+#    #+#             */
+/*   Updated: 2022/10/11 15:41:06 by woojeong         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 int	get_img_scale(t_point **coord, t_img *img)
 {
-	
 	double	multiple;
 
 	img -> scale = sqrt(pow(2 * (img -> max_alt), 2) \
-	+ pow(sqrt((img -> x_size) * (img -> x_size) + (img -> y_size) * (img -> y_size)), 2)) + 20;
+			+ pow(sqrt((img -> x_size) * (img -> x_size) \
+			+ (img -> y_size) * (img -> y_size)), 2)) + 20;
 	multiple = 1;
 	while (img -> scale * multiple < 1000)
 		multiple += 0.2;

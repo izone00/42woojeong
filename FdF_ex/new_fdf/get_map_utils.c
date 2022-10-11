@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_map_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/11 15:32:08 by woojeong          #+#    #+#             */
+/*   Updated: 2022/10/11 16:01:16 by woojeong         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./fdf.h"
 
 int	open_map(char *map)
@@ -41,11 +53,12 @@ void	init_img(t_img *img)
 	img -> max_alt = 0;
 	(img -> move)[0] = 0;
 	(img -> move)[1] = 0;
+	img -> map_err = 0;
 }
 
 int	check_len(char **spl, int *len, t_img *img)
 {
-	*len = 0; 
+	*len = 0;
 	while (spl[*len] && spl[*len][0] != '\n')
 		(*len)++;
 	if (img -> x_size == 0)
