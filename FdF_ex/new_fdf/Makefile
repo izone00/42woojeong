@@ -13,7 +13,7 @@
 FLAG = -lmlx -framework OpenGL -framework AppKit 
 SOURS = draw_img.c event.c get_img_scale.c get_map.c main.c\
 		translate.c turn.c turn_event.c util.c zoom.c get_map_utils.c\
-		draw_img_utils.c
+		draw_img_utils.c err_main.c
 OBJS = ${SOURS:.c=.o}
 NAME = fdf
 LIB = ./libft_ex/libft.a

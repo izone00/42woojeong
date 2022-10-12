@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 15:37:28 by woojeong          #+#    #+#             */
-/*   Updated: 2022/10/11 15:37:28 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:26:58 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	trans_up(t_point **coord, t_point **o_map, t_img *img)
 		x = 0;
 		while (x < img -> x_size)
 		{
-			coord[y][x].y_pos -= trans;
+			coord[y][x].y_pos -= 40;
 			x++;
 		}
 		y++;
 	}
-	(img -> move)[y_move] -= trans;
+	(img -> move)[y_move] -= 40;
 }
 
 void	trans_down(t_point **coord, t_point **o_map, t_img *img)
@@ -42,12 +42,12 @@ void	trans_down(t_point **coord, t_point **o_map, t_img *img)
 		x = 0;
 		while (x < img -> x_size)
 		{
-			coord[y][x].y_pos += trans;
+			coord[y][x].y_pos += 40;
 			x++;
 		}
 		y++;
 	}
-	(img -> move)[y_move] += trans;
+	(img -> move)[y_move] += 40;
 }
 
 void	trans_right(t_point **coord, t_point **o_map, t_img *img)
@@ -61,12 +61,12 @@ void	trans_right(t_point **coord, t_point **o_map, t_img *img)
 		x = 0;
 		while (x < img -> x_size)
 		{
-			coord[y][x].x_pos += trans;
+			coord[y][x].x_pos += 40;
 			x++;
 		}
 		y++;
 	}
-	(img -> move)[x_move] += trans;
+	(img -> move)[x_move] += 40;
 }
 
 void	trans_left(t_point **coord, t_point **o_map, t_img *img)
@@ -80,10 +80,10 @@ void	trans_left(t_point **coord, t_point **o_map, t_img *img)
 		x = 0;
 		while (x < img -> x_size)
 		{
-			coord[y][x].x_pos -= trans;
+			coord[y][x].x_pos -= 40;
 			x++;
 		}
 		y++;
 	}
-	(img -> move)[x_move] -= trans;
+	(img -> move)[x_move] -= 40;
 }

@@ -6,13 +6,12 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 15:31:59 by woojeong          #+#    #+#             */
-/*   Updated: 2022/10/11 17:02:37 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:31:11 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-// right: 124 down:125 left :123 up:126
-// w:13 a:0 s:1 d:2
+
 void	key_event(int keycode, t_point **coord, t_point **o_map, t_img *img)
 {
 	if (keycode == 124)
@@ -55,7 +54,8 @@ int	key_hook(int keycode, void *param)
 	img = ((t_param *)param)-> img;
 	coord = ((t_param *)param)-> coord;
 	o_map = ((t_param *)param)-> o_map;
-	if ((keycode >= 123 && keycode <= 126) || keycode == 13 || (keycode <= 2 && keycode >= 0))
+	if ((keycode >= 123 && keycode <= 126) || keycode == 13 \
+		|| (keycode <= 2 && keycode >= 0))
 	{
 		while (i < ((int)img -> scale) * ((int)img -> scale) * 4)
 			(img -> addr)[i++] = 0x00;
