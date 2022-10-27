@@ -7,95 +7,32 @@ int count = 0;
 
 int main(int argc, char *argv[])
 {
-
-	a.len = 0;
+	if (argc < 2)
+		exit(1);
+	a.arr = parse_argv(argc, argv);
+	if (!a.arr)
+		exit(1);
+	b.arr = (int *)malloc(sizeof(int) * (argc - 1));
+	a.len = argc - 1;
 	b.len = 0;
 	a.spl = 1;
 	b.spl = 1;
 
-	for (a.len = 0; (a.len) < SIZE; (a.len)++)
-		scanf(" %d", (a.arr) + (a.len));
 	printf("start: ");
-	print_stack();
-	if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
-		swap(&a);
-	rotate(&a);
-	print_stack();
-	for (int i = 1; i < SIZE-1; i++)
-	{
-		if (b_flag == (-1))
-		{
-			if (((a.arr)[a.len-2] > (a.arr)[a.len-1]) && ((a.arr)[a.len-2] < (a.arr)[0]))
-				swap(&a);
-			if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
-				b_flag = 1;
-			rotate(&a);
-		}
-		else
-		{
-			if (b_flag == 1)
-			{
-				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
-					swap(&a);
-				push(&a, &b);
-				b_flag++;
-			}
-			else 
-			{
-				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]) && ((a.arr)[a.len-2] > (b.arr)[b.len - 1]))
-					swap(&a);
-				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
-					b_flag = (-1);
-				push(&a, &b);
-			}
-		}
-		print_stack();
-	}
-	print_stack();
-	int i = 0;
-	while (0)
-	{
-		get_spl();
-		if (a.spl <= b.spl)
-		{
-			printf("b->a: ");
-			merge_btoa(b.spl-1);
-			if (b.spl == 1)
-				break;
-		}
-		else
-		{
-			printf("a->b: ");
-			merge_atob(a.spl-1);
-		}
-		print_stack();
-		i++;
-	}
-
-	// get_spl();
-	// printf("mergea\n");
-	// merge_atob(2);
-	// get_spl();
-	// printf("mergeb\n");
-	// merge_btoa(1);
-	// get_spl();
-	// printf("mergea\n");
-	// merge_atob(1);
-	// get_spl();
-	// printf("mergeb\n");
-	// merge_btoa(0);
-	// printf("merge\n");
-	// mergeatob(0);
-	print_stack();
+	// print_stack();
+	// merge_sort(argc);
+	grid_sort();
+	// printf("\n");
+	// print_stack();
 	printf("count: %d\n", count);
 }
-
-
 
 /*
 
 for (int i = 0; i < 20; i++)
 		scanf(" %d", (a.arr) + i);
+2 3 4 1 5
+
 7 9 10 2 3 5 6 1 4 8
 8 9 10 2 3 5 6 1 4 7
 

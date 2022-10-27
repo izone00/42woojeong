@@ -1,5 +1,62 @@
 #include "push_swap.h"
 
+void	merge_sort(int argc)
+{
+	if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
+		swap(&a);
+	rotate(&a);
+	print_stack();
+	for (int i = 1; i < (argc - 1 - 1); i++)
+	{
+		if (b_flag == (-1))
+		{
+			if (((a.arr)[a.len-2] > (a.arr)[a.len-1]) && ((a.arr)[a.len-2] < (a.arr)[0]))
+				swap(&a);
+			if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
+				b_flag = 1;
+			rotate(&a);
+		}
+		else
+		{
+			if (b_flag == 1)
+			{
+				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
+					swap(&a);
+				push(&a, &b);
+				b_flag++;
+			}
+			else 
+			{
+				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]) && ((a.arr)[a.len-2] > (b.arr)[b.len - 1]))
+					swap(&a);
+				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
+					b_flag = (-1);
+				push(&a, &b);
+			}
+		}
+		// print_stack();
+	}
+	print_stack();
+	int i = 0;
+	while (1)
+	{
+		get_spl();
+		if (a.spl <= b.spl)
+		{
+			printf("b->a: ");
+			merge_btoa(b.spl-1);
+			if (b.spl == 1)
+				break;
+		}
+		else
+		{
+			printf("a->b: ");
+			merge_atob(a.spl-1);
+		}
+		print_stack();
+		i++;
+	}
+}
 void	merge_atob(int idx)
 {
 	int ai = a.larr[a.spl-1];

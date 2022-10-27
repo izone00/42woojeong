@@ -13,6 +13,7 @@ void swap(t_stack *stack)
 		(stack -> arr)[(stack -> len) - 2] = temp;
 	}
 	// print_stack();
+	// check_diff();
 	count++;
 }
 
@@ -27,6 +28,7 @@ void push(t_stack *src, t_stack *dest)
 		(src -> len)--;
 	}
 	// print_stack();
+	// check_diff();
 	count++;
 }
 
@@ -44,6 +46,7 @@ void rotate_reverse(t_stack *stack)
 	}
 	(stack -> arr)[(stack -> len) - 1] = temp;
 	// print_stack();
+	// check_diff();
 	count++;
 }
 
@@ -61,5 +64,6 @@ void rotate(t_stack *stack)
 	}
 	(stack -> arr)[0] = temp;
 	// print_stack();
+	// check_diff();
 	count++;
 }
