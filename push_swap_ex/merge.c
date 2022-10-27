@@ -2,40 +2,8 @@
 
 void	merge_sort(int argc)
 {
-	if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
-		swap(&a);
-	rotate(&a);
-	print_stack();
-	for (int i = 1; i < (argc - 1 - 1); i++)
-	{
-		if (b_flag == (-1))
-		{
-			if (((a.arr)[a.len-2] > (a.arr)[a.len-1]) && ((a.arr)[a.len-2] < (a.arr)[0]))
-				swap(&a);
-			if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
-				b_flag = 1;
-			rotate(&a);
-		}
-		else
-		{
-			if (b_flag == 1)
-			{
-				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
-					swap(&a);
-				push(&a, &b);
-				b_flag++;
-			}
-			else 
-			{
-				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]) && ((a.arr)[a.len-2] > (b.arr)[b.len - 1]))
-					swap(&a);
-				if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
-					b_flag = (-1);
-				push(&a, &b);
-			}
-		}
-		// print_stack();
-	}
+	for (int i = 0 ; i < (argc - 1) / 2; i++)
+		push(&a, &b);
 	print_stack();
 	int i = 0;
 	while (1)
@@ -64,7 +32,7 @@ void	merge_atob(int idx)
 
 	while (ai + bi > 0)
 	{
-		if (ai > 0 && (bi == 0 || a.arr[a.len-1] > b.arr[b.len-1]))
+		if (ai > 0 && (bi == 0 || a.arr[a.len-1] < b.arr[b.len-1]))
 		{
 			push(&a, &b);
 			ai--;
@@ -81,7 +49,7 @@ void	merge_btoa(int idx)
 
 	while (ai + bi > 0)
 	{
-		if (bi > 0 && (ai == 0 || a.arr[a.len-1] < b.arr[b.len-1]))
+		if (bi > 0 && (ai == 0 || a.arr[a.len-1] > b.arr[b.len-1]))
 		{
 			push(&b, &a);
 			bi--;
@@ -137,3 +105,38 @@ void	pre_merge_btoa(int idx)
 	// while (a.arr[a.len-1] < a.arr[0])
 	// 	rotate_reverse(&a);
 }
+
+// if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
+// 	swap(&a);
+// rotate(&a);
+// print_stack();
+// for (int i = 1; i < (argc - 1 - 1); i++)
+// {
+// 	if (b_flag == (-1))
+// 	{
+// 		if (((a.arr)[a.len-2] > (a.arr)[a.len-1]) && ((a.arr)[a.len-2] < (a.arr)[0]))
+// 			swap(&a);
+// 		if (((a.arr)[a.len-2] > (a.arr)[a.len-1]))
+// 			b_flag = 1;
+// 		rotate(&a);
+// 	}
+// 	else
+// 	{
+// 		if (b_flag == 1)
+// 		{
+// 			if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
+// 				swap(&a);
+// 			push(&a, &b);
+// 			b_flag++;
+// 		}
+// 		else 
+// 		{
+// 			if (((a.arr)[a.len-2] < (a.arr)[a.len-1]) && ((a.arr)[a.len-2] > (b.arr)[b.len - 1]))
+// 				swap(&a);
+// 			if (((a.arr)[a.len-2] < (a.arr)[a.len-1]))
+// 				b_flag = (-1);
+// 			push(&a, &b);
+// 		}
+// 	}
+// 	// print_stack();
+// }

@@ -19,11 +19,11 @@ int main(int argc, char *argv[])
 	b.spl = 1;
 
 	printf("start: ");
-	// print_stack();
-	// merge_sort(argc);
-	grid_sort();
+	print_stack();
+	merge_sort(argc);
+	// grid_sort();
 	// printf("\n");
-	// print_stack();
+	print_stack();
 	printf("count: %d\n", count);
 }
 
