@@ -21,7 +21,7 @@ void	get_spl()
 	for (int i = 0; i < b.len; i++)
 	{
 		b.larr[j]++;
-		if (i < b.len-1 && b.arr[i] < b.arr[i+1])
+		if (i < b.len-1 && b.arr[i] > b.arr[i+1])////
 		{
 			b.spl++;
 			j++;
@@ -44,7 +44,7 @@ void print_stack()
 	for (int i = 0; i < a.len; i++)
 	{
 		printf("%d ", (a.arr)[i]);
-		if (i < a.len-1 && a.arr[i] < a.arr[i+1])
+		if (i < a.len-1 && a.arr[i] < a.arr[i+1])////
 			printf("| ");
 	}
 	printf("] ");
@@ -52,10 +52,10 @@ void print_stack()
 	for (int i = 0; i < b.len; i++)
 	{
 		printf("%d ", (b.arr)[i]);
-		if (i < b.len-1 && b.arr[i] < b.arr[i+1])
+		if (i < b.len-1 && b.arr[i] > b.arr[i+1])////
 			printf("| ");
 	}
-	printf("] count: %d len_a: %d len_b: %d\n", count, a.len, b.len);
+	printf("] spl_a: %d spl_b: %d len_a: %d len_b: %d count: %d \n", a.spl, b.spl, a.len, b.len, count);
 	printf("\n");
 }
 
