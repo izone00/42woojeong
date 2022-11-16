@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 15:43:46 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/27 18:24:44 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	pipe_to_file_eof(char *av_i[], char *path[], int pipefd[2][2], char *envp[])
 			if (exe_cmd(cmd_path, cmd_argv, envp))
 				wait(NULL);
 			free(cmd_path);
-			free(cmd_argv);
+			array_free(cmd_argv);
 		}
 		close(0);
 	}

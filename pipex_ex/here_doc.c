@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/13 14:50:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/27 18:24:44 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ int	here_doc(char *argv_i[], char *path[], int pipefd[2][2], char *envp[])
 		err(path);
 	if (!pipe_to_file_eof(argv_i + 2, path, pipefd, envp))
 		err(path);
-	path_free(path);
+	array_free(path);
 	exit(0);
 }
 
 static void	err(char *path[])
 {
-	path_free(path);
+	array_free(path);
 	exit(1);
 }

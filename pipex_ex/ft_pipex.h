@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/19 18:44:36 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 19:07:21 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/27 18:24:44 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,11 @@ int		file_to_pipe(char *av[], char *path[], int pipefd[2][2], char *envp[]);
 char	**get_path(char *envp[]);
 char	*get_file_path(char *file);
 char	*get_cmd_path(char *cmd, char *path[]);
-void	path_free(char *path[]);
+void	array_free(char *path[]);
 int		here_doc(char *argv_i[], char *path[], int pipefd[2][2], char *envp[]);
 int		read_by_heredoc(char *limiter, int pipefd[2][2]);
 int		make_exe_param(char ***av, char **pa, char *argv_i, char *path[]);
 int		exe_cmd(char *cmd_path, char **cmd_argv, char *envp[]);
-void	path_free(char *path[]);
 int		pipe_to_file(char *av[], char *path[], int pipefd[2][2], char *envp[]);
 int		pipe_to_pipe(char *av[], char *path[], int pipefd[2][2], char *envp[]);
 int		stdout_redir_pipe(int pipefd[2][2]);

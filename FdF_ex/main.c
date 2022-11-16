@@ -1,13 +1,17 @@
 #include <mlx.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <math.h>
+
 #include "./libft.h"
 
+int x=100, y = 800;
+
 typedef struct s_point {
-	int x_pos;
-	int y_pos;
-	int alt;
+	double x_pos;
+	double y_pos;
+	double alt;
 } t_point;
 
 void	*mlx_ptr;
@@ -40,7 +44,19 @@ void	draw_line(t_point p1, t_point p2)
 			grad = p1.alt;
 			if (p2.alt != p1.alt)
 				grad += ((p2.alt - p1.alt) * (x - x1)) / (x2 - x1);
-			mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x1)+y1), 0x00ffffff - 0x000404*(int)grad);
+			if (grad < 0)
+				grad *= -1;
+			mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x1)+y1), 0x00ffffff);
+			if (m > 0)
+			{
+				for (int i = 0; i < m; i++)
+					mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x2)+y2 + i), 0x00ffffff);
+			}
+			else
+			{
+				for (int i = 0; i > m; i--)
+					mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x2)+y2 + i), 0x00ffffff);
+			}
 		}
 	}
 	else
@@ -50,116 +66,89 @@ void	draw_line(t_point p1, t_point p2)
 			grad = p2.alt;
 			if (p2.alt != p1.alt)
 				grad += ((p1.alt - p2.alt) * (x - x2)) / (x1 - x2);
-			mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x2)+y2), 0x00ffffff - 0x000404*(int)grad);
+			if (grad < 0)
+				grad *= -1;
+			mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x2)+y2), 0x00ffffff);
+			if (m > 0)
+			{
+				for (int i = 0; i < m; i++)
+					mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x2)+y2 + i), 0x00ffffff);
+			}
+			else
+			{
+				for (int i = 0; i > m; i--)
+					mlx_pixel_put(mlx_ptr, win_ptr, (int)x, (int)(m*(x-x2)+y2 + i), 0x00ffffff);
+			}
 		}
 	}
 }
-void	transform(t_point *P)
-{
-	int X = 0,Y = 0;
 
-	X += (P->x_pos - origin.x_pos) * cos(3.14 / 6);
-	Y -= (P->x_pos - origin.x_pos) * sin(3.14 / 6);
-	X -= (P->y_pos - origin.y_pos) * cos(3.14 / 6);
-	Y -= (P->y_pos - origin.y_pos) * sin(3.14 / 6);
-	P->x_pos = origin.x_pos + X;
-	P->y_pos = origin.y_pos + Y;
-	// mlx_pixel_put(mlx_ptr, win_ptr, P->x_pos, P->y_pos, 0x00ffffff);
+int	get_map_info(int *x_size, int *y_size, t_point *coord, char *file)
+{
+	int num = 0;
+	int fd = open(ft_strjoin("./", file), O_RDONLY);
+
+	for (int j = 0; ; j++)
+	{
+		char *line = get_next_line(fd);
+		if (!line)
+			break ;
+		char **spl = ft_split(line, ' ');
+		for (int i = 0; spl[i] && spl[i][0] != '\n'; i++)
+		{
+			coord[num].x_pos = x + (5*sqrt(3)*j) + (5*sqrt(3)*i);
+			coord[num].y_pos = y + (5*j) - (5*i);
+			// coord[num].alt = ft_atoi(spl[i])*5;
+			num++;
+			*x_size = i + 1;
+		}
+		*y_size = j + 1;
+	}
+	return (num);
 }
-int main()
+int key_hook(int keycode, void *param)
+{
+	if (keycode == 53)
+	{
+		mlx_clear_window(mlx_ptr, win_ptr);
+		mlx_destroy_window(mlx_ptr, win_ptr);
+		exit(0);
+	}
+	return (1);
+}
+
+int main(int argc, char *argv[])
 {
 	mlx_ptr = mlx_init();
 	win_ptr = mlx_new_window(mlx_ptr, 2000, 1200, "test_mlx");
 
-	t_point axis[1000];
+	t_point *coord;
+	coord = malloc(sizeof(t_point) * 100000000);
 	int num = 0;
-	int x=800, y = 100;
-
-	for (int i = 0; i < 30; i++)
-	{
-		for (int j = 0; j < 20; j++)
-		{
-			axis[num].x_pos = x + (35*i) - (35*j);
-			axis[num].y_pos = y + (20*i) + (20*j);
-			axis[num].alt = 0;
-			num++;
-		}
-	}
-	for(int i = 3; i < 17; i++)
-	{
-		if (i < 11)
-		{
-			axis[120 + i].alt  = 20;
-			axis[140 + i].alt  = 20;
-			axis[400 + i].alt  = 20;
-			axis[420 + i].alt  = 20;
-		}
-		else
-		{
-			axis[300 + i].alt  = 20;
-			axis[320 + i].alt  = 20;
-			
-		}
-		axis[220 + i].alt  = 20;
-		axis[240 + i].alt  = 20;
-	}
-	for (int i = 160; i <= 420; i+= 20)
-	{
-		if (i != 260 && i != 280)
-		{
-			axis[i + 9].alt  = 20;
-			axis[i + 10].alt  = 20;
-		}
-		if (i > 280)
-		{
-			axis[i + 3].alt  = 20;
-			axis[i + 4].alt  = 20;
-			axis[i + 15].alt  = 20;
-			axis[i + 16].alt = 20;
-		}
-	}
-	for (int i = 0; i < num; i++)
-		mlx_pixel_put(mlx_ptr, win_ptr, axis[i].x_pos, axis[i].y_pos, 0x00ff0000);
+	
+	int x_size = 0, y_size = 0;
+	num = get_map_info(&x_size, &y_size, coord, argv[1]);
 	for (int i = 0; i < num - 1; i++)
 	{
-		if (i % 20 != 19)
-			draw_line(axis[i], axis[i+1]);
-		if (i < num - 20)
-			draw_line(axis[i], axis[i+20]);
+		if (i % x_size != x_size - 1)
+			draw_line(coord[i], coord[i+1]);
+		if (i < num - x_size)
+			draw_line(coord[i], coord[i+x_size]);
 	}
-	printf("%x\n", 0x00ffffff);
-	printf("%x\n", 0x00ffffff - (0x000200 * 2) );
+	void *param;
+	mlx_key_hook(win_ptr, key_hook, param);
 	mlx_loop (mlx_ptr);
-
-
-	// for (int i = -5; i < 6; i++)
-	// {
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2].x_pos, axis[num/2 + i].y_pos, 0x0000ffff);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 + 11*i].x_pos, axis[num/2].y_pos, 0x00ffff00);
-	// }
-	// for (int i = -5; i < 6; i++)
-	// {
-	// 	transform(axis + num/2 + i);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 + i].x_pos, axis[num/2 + i].y_pos, 0x0000ffff);
-	// 	transform(axis + num/2 + 11 + i);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 + 11 + i].x_pos, axis[num/2 + 11 + i].y_pos, 0x0000ffff);
-	// 	transform(axis + num/2 - 11 + i);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 - 11 + i].x_pos, axis[num/2 - 11 + i].y_pos, 0x0000ffff);
-	// 	transform(axis + num/2 + 11*i);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 + 11*i].x_pos, axis[num/2 + 11*i].y_pos, 0x00ffff00);
-	// 	transform(axis + num/2 + 11*i + 1);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 + 11*i + 1].x_pos, axis[num/2 + 11*i + 1].y_pos, 0x00ffff00);
-	// 	transform(axis + num/2 + 11*i - 1);
-	// 	mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 + 11*i - 1].x_pos, axis[num/2 + 11*i - 1].y_pos, 0x00ffff00);
-	// 	// draw_line(origin.x_pos, origin.y_pos, axis[num/2 + i].x_pos, axis[num/2 + i].y_pos);
-	// }
-
-	// mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2 - 1].x_pos, axis[num/2 - 1].y_pos, 0x00ffffff);
-	// mlx_pixel_put(mlx_ptr, win_ptr, axis[num/2].x_pos, axis[num/2].y_pos, 0x000000ff);
-
-	// mlx_string_put(mlx_ptr, win_ptr, 200, 0, 0xaaaaaa, "hello");
-	// int height, width;
-	// void *img_ptr = mlx_xpm_file_to_image(mlx_ptr, "./sample_640×426.xpm", &height, &width);
-	// mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 200, 200);
-
 }
+
+	// void	*img_ptr = mlx_new_image(mlx_ptr, 200, 200);
+	// int bits_per_pixel, size_line, endian;
+	// char	*img_addr = mlx_get_data_addr(img_ptr, &bits_per_pixel, &size_line, &endian);
+	// for (int i = 0; i < 10; i++)
+	// {
+	// 	*(img_addr) = 0xff;
+	// 	*(img_addr+1) = 0xff;
+	// 	*(img_addr+2) = 0xff;
+	// 	*(img_addr+3) = 0x00;
+	// 	img_addr += size_line;
+	// }
+	// mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 500, 500);

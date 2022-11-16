@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 15:24:37 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:17 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/27 18:25:07 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,13 @@ int	exe_cmd(char *cmd_path, char **cmd_argv, char *envp[])
 		if (execve(cmd_path, cmd_argv, envp) < 0)
 		{
 			perror("zsh");
-			//free_child();// child를 위한 free및 close 필요
 			exit(1);
 		}
 	}
 	return (1);
 }
 
-void	path_free(char *path[])
+void	array_free(char *path[])
 {
 	int	idx;
 

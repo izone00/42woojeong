@@ -6,7 +6,7 @@
 #    By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/09 20:46:01 by woojeong          #+#    #+#              #
-#    Updated: 2022/09/15 17:14:18 by woojeong         ###   ########.fr        #
+#    Updated: 2022/09/27 17:55:16 by woojeong         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,6 @@ all: 		${NAME}
 
 ${NAME}:	${OBJS_FILES}
 			ar rc ${NAME} ${OBJS_FILES}
-
 bonus:
 			make BONUS_SIGN=1 all
 

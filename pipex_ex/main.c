@@ -6,7 +6,7 @@
 /*   By: woojeong <woojeong@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 21:03:10 by woojeong          #+#    #+#             */
-/*   Updated: 2022/09/19 18:56:59 by woojeong         ###   ########.fr       */
+/*   Updated: 2022/09/27 18:25:31 by woojeong         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int argc, char *argv[], char *envp[])
 	}
 	if (!pipe_to_file(argv + argc - 2, path, pipefd, envp))
 		err(path);
-	path_free(path);
+	array_free(path);
 	exit(0);
 }
 
@@ -51,6 +51,6 @@ static void	argc_err(void)
 
 static void	err(char *path[])
 {
-	path_free(path);
+	array_free(path);
 	exit(1);
 }
