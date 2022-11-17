@@ -1,0 +1,11 @@
+total 280
+-rwxr-xr-x  1 woojeong  2022_seoul  51104 Nov 17 22:04 a.out
+-rw-r--r--@ 1 woojeong  2022_seoul   2593 Nov 17 21:50 ft_printf.h
+-rw-r--r--  1 woojeong  2022_seoul      6 Nov 17 21:30 infile
+-rw-r--r--  1 woojeong  2022_seoul  39296 Nov 17 21:14 libft.a
+-rw-r--r--  1 woojeong  2022_seoul   2946 Nov 17 21:19 libft.h
+-rw-r--r--  1 woojeong  2022_seoul  16800 Nov 17 21:49 libftprintf.a
+-rw-r--r--  1 woojeong  2022_seoul   3077 Nov 17 22:04 main.c
+-rw-r--r--  1 woojeong  2022_seoul    603 Nov 17 21:50 mini.h
+-rw-r--r--  1 woojeong  2022_seoul     59 Nov 17 21:46 outfile
+-rw-r--r--  1 woojeong  2022_seoul    845 Nov 17 21:17 utils.c

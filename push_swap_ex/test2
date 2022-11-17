@@ -1,0 +1,13 @@
+total 208
+-rwxr-xr-x   1 woojeong  2022_seoul  70472 Nov  1 14:41 a.out
+-rw-r--r--   1 woojeong  2022_seoul   2046 Oct 27 17:07 grid.c
+drwxr-xr-x  51 woojeong  2022_seoul   1734 Oct 27 13:18 libft_ex
+-rw-r--r--   1 woojeong  2022_seoul   2100 Oct 29 14:38 main.c
+-rw-r--r--   1 woojeong  2022_seoul   2251 Oct 29 14:38 merge.c
+-rw-r--r--   1 woojeong  2022_seoul   1002 Oct 27 13:40 parse_argv.c
+-rw-r--r--   1 woojeong  2022_seoul   3230 Oct 29 14:57 pre_merge.c
+-rw-r--r--   1 woojeong  2022_seoul    819 Oct 29 14:38 push_swap.h
+-rw-r--r--   1 woojeong  2022_seoul   1110 Oct 29 14:52 stack_util.c
+-rw-r--r--   1 woojeong  2022_seoul   1114 Oct 29 14:38 temp_util.c
+-rw-r--r--   1 woojeong  2022_seoul      0 Nov 17 20:53 test2
+-rw-r--r--   1 woojeong  2022_seoul      0 Nov 17 20:53 testout
